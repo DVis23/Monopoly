@@ -34,12 +34,11 @@ public class ManagerFrame extends JDialog {
         Font font = new Font("BOLD", Font.BOLD, 12);
 
         Cell [] cells = playingField.getCells();
-        for (int i = 0; i < cells.length; i++) {
-            Cell cell = cells[i];
-            if (cell.getClass() == Street.class){
+        for (Cell cell : cells) {
+            if (cell.getClass() == Street.class) {
                 if (((Street) cell).getOwner() == player) {
                     StringBuilder sb = new StringBuilder();
-                    sb.append(" Продать улицу ' ").append(((Street) cell).getName()).append(" ' за ").append(((Street) cell).getCost()/2);
+                    sb.append(" Продать улицу ' ").append(((Street) cell).getName()).append(" ' за ").append(((Street) cell).getCost() / 2);
                     String str = sb.toString();
                     JButton button = new JButton(str);
                     button.setPreferredSize(new Dimension(400, 80));
@@ -57,7 +56,7 @@ public class ManagerFrame extends JDialog {
                         @Override
                         public void actionPerformed(ActionEvent actionEvent) {
                             ((Street) cell).deleteOwner(playingField);
-                            player.setLiberalValues(player.getLiberalValues() + ((Street) cell).getCost()/2);
+                            player.setLiberalValues(player.getLiberalValues() + ((Street) cell).getCost() / 2);
                             panel.remove(button);
                             panel.setVisible(true);
                         }
@@ -89,10 +88,10 @@ public class ManagerFrame extends JDialog {
                     }
                 }
             }
-            if (cell.getClass() == RailRoad.class){
+            if (cell.getClass() == RailRoad.class) {
                 if (((RailRoad) cell).getOwner() == player) {
                     StringBuilder sb = new StringBuilder();
-                    sb.append(" Продать железную дорогу ' ").append(((RailRoad) cell).getName()).append(" ' за ").append(((RailRoad) cell).getCost()/2);
+                    sb.append(" Продать железную дорогу ' ").append(((RailRoad) cell).getName()).append(" ' за ").append(((RailRoad) cell).getCost() / 2);
                     String str = sb.toString();
                     JButton button = new JButton(str);
                     button.setPreferredSize(new Dimension(400, 80));
@@ -110,18 +109,18 @@ public class ManagerFrame extends JDialog {
                         @Override
                         public void actionPerformed(ActionEvent actionEvent) {
                             ((RailRoad) cell).deleteOwner();
-                            player.setLiberalValues(player.getLiberalValues() + ((RailRoad) cell).getCost()/2);
+                            player.setLiberalValues(player.getLiberalValues() + ((RailRoad) cell).getCost() / 2);
                             panel.remove(button);
                             panel.setVisible(true);
                         }
                     });
                 }
             }
-            if (cell.getClass() == UtilityCompany.class){
+            if (cell.getClass() == UtilityCompany.class) {
                 if (((UtilityCompany) cell).getOwner() == player) {
                     StringBuilder sb = new StringBuilder();
                     sb.append(" Продать коммунальную службу ' ").append(((UtilityCompany) cell).getName()).
-                            append(" ' за ").append(((UtilityCompany) cell).getCost()/2);
+                            append(" ' за ").append(((UtilityCompany) cell).getCost() / 2);
                     String str = sb.toString();
                     JButton button = new JButton(str);
                     button.setPreferredSize(new Dimension(400, 80));
@@ -139,7 +138,7 @@ public class ManagerFrame extends JDialog {
                         @Override
                         public void actionPerformed(ActionEvent actionEvent) {
                             ((UtilityCompany) cell).deleteOwner();
-                            player.setLiberalValues(player.getLiberalValues() + ((UtilityCompany) cell).getCost()/2);
+                            player.setLiberalValues(player.getLiberalValues() + ((UtilityCompany) cell).getCost() / 2);
                             panel.remove(button);
                             panel.setVisible(true);
                         }

@@ -7,7 +7,7 @@ import java.awt.*;
 
 public class InformPlayer extends JPanel {
 
-    private JTextArea textArea;
+    private final JTextArea textArea;
     public InformPlayer(Player player) {
         this.setPreferredSize(new Dimension(250, 60));
         this.setBackground(new Color(60,60,59));

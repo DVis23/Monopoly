@@ -1,5 +1,10 @@
 package ru.vsu.cs.gui.gui_cells;
 
+import ru.vsu.cs.Player;
+import ru.vsu.cs.PlayingField;
+import ru.vsu.cs.cells.Jail;
+import ru.vsu.cs.gui.GUICell;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -8,17 +13,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class GUIJail extends JPanel {
+public class GUIJail extends GUICell {
 
     private JPanel MainPanel;
 
-    public GUIJail() throws IOException {
-        this.setPreferredSize(new Dimension(70, 70));
-        this.setLayout(new BorderLayout());
-        this.setLayout(new BorderLayout(0,0));
-        this.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-        this.setBorder(new LineBorder(Color.WHITE));
-        this.setBorder(new LineBorder(Color.BLACK));
+    public GUIJail(Jail jail) throws IOException {
+
 
         MainPanel = new JPanel();
         MainPanel.setPreferredSize(new Dimension(70, 70));
@@ -31,5 +31,10 @@ public class GUIJail extends JPanel {
 
         this.add(MainPanel, BorderLayout.CENTER);
         this.setVisible(true);
+    }
+
+    @Override
+    public void show(JPanel board, Player playerNow, PlayingField playingField){
+
     }
 }

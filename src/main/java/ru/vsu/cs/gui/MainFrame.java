@@ -74,15 +74,18 @@ public class MainFrame extends JFrame {
 
         board = new JPanel();
         board.setPreferredSize(new Dimension(770, 770));
+        board.setLayout(new BorderLayout(0,0));
+        board.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+
 
         GridLayout layout = new GridLayout(6, 1, 0, 0);
+
         panelPlayer = new JPanel();
         panelPlayer.setLayout(layout);
         panelPlayer.setPreferredSize(new Dimension(250, 400));
         panelPlayer.setBackground(new Color(61,60,59));
 
-        board.setLayout(new BorderLayout(0,0));
-        board.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+
 
         makeAMove.setPreferredSize(new Dimension(250, 40));
         panelButton.add(makeAMove);
@@ -165,7 +168,6 @@ public class MainFrame extends JFrame {
         panelNorthMini.setLayout(layoutHor);
         panelCenter.add(panelNorthMini, BorderLayout.NORTH);
 
-        drawBoardPanel();
 
         int numberPlayers = 0;
         while(numberPlayers <= 1 || numberPlayers > 7) {
@@ -187,7 +189,7 @@ public class MainFrame extends JFrame {
             if(name == null && players.size() == 0) {
                 System.exit(0);
             }
-            Player player = new Player(name, 50000);
+            Player player = new Player(name, 7500);
             players.add(player);
         }
         game = new Game(players);
@@ -196,6 +198,7 @@ public class MainFrame extends JFrame {
         playerNow = players.get(0);
 
         drawPlayersBoard();
+        drawBoardPanel();
         drawBoardMini();
 
         makeAMove.addActionListener(new ActionListener() {
@@ -212,54 +215,15 @@ public class MainFrame extends JFrame {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                if (playingField.getCells()[playerNow.getStep()].getClass() == Chance.class) {
-                    if (((Chance)playingField.getCells()[playerNow.getStep()]).getI() == 1) {
-                        JOptionPane.showMessageDialog(board, " Поле шанс: вы сделали взнос в размере 2000 ");
-                    } else if (((Chance)playingField.getCells()[playerNow.getStep()]).getI() == 2) {
-                        JOptionPane.showMessageDialog(board, " Поле шанс: вы выиграли в лотерее 5000 ");
-                    } else if (((Chance)playingField.getCells()[playerNow.getStep()]).getI() == 3) {
-                        JOptionPane.showMessageDialog(board, " Поле шанс: каждый игрок скидывается вам на банкет по 500 ");
-                    } else if (((Chance)playingField.getCells()[playerNow.getStep()]).getI() == 4) {
-                        JOptionPane.showMessageDialog(board, " Поле шанс: вы выплатили каждому игроку по 500 в знак дружбы ");
-                    }
+
+                GUICell [] guiCells = new GUICell[0];
+                try {
+                    guiCells = guiCells();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                if (playingField.getCells()[playerNow.getStep()].getClass() == CommunityChest.class) {
-                    if (((CommunityChest)playingField.getCells()[playerNow.getStep()]).getI() == 1) {
-                        JOptionPane.showMessageDialog(board, " Поле казна: вы заплатили налог 2500 ");
-                    } else if (((CommunityChest)playingField.getCells()[playerNow.getStep()]).getI() == 2) {
-                        JOptionPane.showMessageDialog(board, " Поле казна: вам выплатили 1000 за вашу улыбку ");
-                    } else if (((CommunityChest)playingField.getCells()[playerNow.getStep()]).getI() == 3) {
-                        JOptionPane.showMessageDialog(board, " Поле казна: вы получили в наследство 3000 ");
-                    } else if (((CommunityChest)playingField.getCells()[playerNow.getStep()]).getI() == 4) {
-                        JOptionPane.showMessageDialog(board, " Поле казна: вы выплатили каждому игроку по 1000 в знак уважения ");
-                    }
-                }
-                int o = 3;
-                if (playingField.getCells()[playerNow.getStep()].getClass() == Street.class){
-                    if (((Street) playingField.getCells()[playerNow.getStep()]).getOwner() == null) {
-                        if (playerNow.getLiberalValues() > ((Street) playingField.getCells()[playerNow.getStep()]).getCost()) {
-                            o = JOptionPane.showConfirmDialog(board, "Купить улицу?");
-                        }
-                    }
-                    if (o == 0) ((Street) playingField.getCells()[playerNow.getStep()]).action2(playerNow, playingField);
-                }
-                if (playingField.getCells()[playerNow.getStep()].getClass() == RailRoad.class){
-                    if (((RailRoad) playingField.getCells()[playerNow.getStep()]).getOwner() == null) {
-                        if (playerNow.getLiberalValues() > ((RailRoad) playingField.getCells()[playerNow.getStep()]).getCost()) {
-                            o = JOptionPane.showConfirmDialog(board, "Купить железную дорогу?");
-                        }
-                        if (o == 0) ((RailRoad) playingField.getCells()[playerNow.getStep()]).action2(playerNow, playingField);
-                    }
-                }
-                if (playingField.getCells()[playerNow.getStep()].getClass() == UtilityCompany.class){
-                    if (((UtilityCompany) playingField.getCells()[playerNow.getStep()]).getOwner() == null) {
-                        if (playerNow.getLiberalValues() > ((UtilityCompany) playingField.getCells()[playerNow.getStep()]).getCost()) {
-                            o = JOptionPane.showConfirmDialog(board, "Купить коммунальную службу?");
-                        }
-                        if (o == 0)
-                            ((UtilityCompany) playingField.getCells()[playerNow.getStep()]).action2(playerNow, playingField);
-                    }
-                }
+                guiCells[playerNow.getStep()].show(board, playerNow, game.getPlayingField());
+
                 nextPlayer();
                 if (game.getGameState() == Game.GameState.GAME_OVER) {
                     JOptionPane.showMessageDialog(board, "Игра окончена, победил игрок: '" + players.get(0).getName() + "'");
@@ -292,54 +256,42 @@ public class MainFrame extends JFrame {
     }
 
     private void drawBoardPanel() throws IOException {
-        drawPanel(panelNorth, 0, 10);
-        drawPanel(panelEast, 11, 19);
-        drawPanel(panelSouth, 30,20);
-        drawPanel(panelWest, 39, 31);
+        Cell [] cells = playingField.getCells();
+        drawPanel(panelNorth, 0, cells.length/4);
+        drawPanel(panelEast, cells.length/4 + 1, cells.length/2 - 1);
+        drawPanel(panelSouth, cells.length/4*3,cells.length/2);
+        drawPanel(panelWest, cells.length - 1, cells.length/4*3 + 1);
     }
 
     private void drawPanel(JPanel panel, int a, int b) throws IOException {
+        GUICell [] guiCells = guiCells();
         if (a < b) {
             for (int i = a; i <= b; i++) {
-                drawCell(panel, i);
+                panel.add(guiCells[i]);
             }
         } else if (a > b) {
             for (int i = a; i >= b; i--) {
-                drawCell(panel, i);
+                panel.add(guiCells[i]);
             }
         }
     }
 
-    private void drawCell(JPanel panel, int i) throws IOException {
-        Cell cell = playingField.getCells()[i];
-        if (cell.getClass() == Street.class) {
-            panel.add(new GUIStreet((Street) cell));
-        } else if (cell.getClass() == RailRoad.class) {
-            panel.add(new GUIRailRoad((RailRoad) cell));
-        } else if (cell.getClass() == Chance.class) {
-            panel.add(new GUIChance());
-        } else if (cell.getClass() == CommunityChest.class) {
-            panel.add(new GUICommunityChest());
-        } else if (cell.getClass() == FreeParking.class) {
-            panel.add(new GUIFreeParking());
-        } else if (cell.getClass() == GoToJail.class) {
-            panel.add(new GUIGoToJail());
-        } else if (cell.getClass() == Jail.class) {
-            panel.add(new GUIJail());
-        } else if (cell.getClass() == StartCell.class) {
-            panel.add(new GUIStartCell());
-        } else if (cell.getClass() == Tax.class) {
-            panel.add(new GUITax((Tax) cell));
-        } else if (cell.getClass() == UtilityCompany.class) {
-            panel.add(new GUIUtilityCompany((UtilityCompany) cell));
+    private GUICell [] guiCells() throws IOException {
+        Cell [] cells = playingField.getCells();
+        GUICell [] guiCells = new GUICell[cells.length];
+        for (int i = 0; i < cells.length; i++) {
+            GUICell guiCell = GUICellFactory.createGUICell(cells[i]);
+            guiCells[i] = guiCell;
         }
+        return guiCells;
     }
 
     private void drawBoardMini() {
-        drawPanelMini(panelNorthMini, 0, 10, players);
-        drawPanelMini(panelEastMini, 11, 19, players);
-        drawPanelMini(panelSouthMini, 30,20, players);
-        drawPanelMini(panelWestMini, 39, 31, players);
+        Cell [] cells = playingField.getCells();
+        drawPanelMini(panelNorthMini, 0, cells.length/4, players);
+        drawPanelMini(panelEastMini, cells.length/4 + 1, cells.length/2 - 1, players);
+        drawPanelMini(panelSouthMini, cells.length/4*3,cells.length/2, players);
+        drawPanelMini(panelWestMini, cells.length - 1, cells.length/4*3 + 1, players);
     }
 
     private void drawPanelMini(JPanel panel, int a, int b, ArrayList<Player> players) {

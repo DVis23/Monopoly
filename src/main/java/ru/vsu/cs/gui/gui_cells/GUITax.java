@@ -1,6 +1,9 @@
 package ru.vsu.cs.gui.gui_cells;
 
+import ru.vsu.cs.Player;
+import ru.vsu.cs.PlayingField;
 import ru.vsu.cs.cells.Tax;
+import ru.vsu.cs.gui.GUICell;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -10,16 +13,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class GUITax extends JPanel {
+public class GUITax extends GUICell {
 
     private JPanel MainPanel;
 
     public GUITax(Tax tax) throws IOException {
-        this.setPreferredSize(new Dimension(70, 70));
-        this.setLayout(new BorderLayout());
-        this.setLayout(new BorderLayout(0,0));
-        this.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-        this.setBorder(new LineBorder(Color.BLACK));
 
         MainPanel = new JPanel();
         MainPanel.setPreferredSize(new Dimension(70, 70));
@@ -32,5 +30,10 @@ public class GUITax extends JPanel {
 
         this.add(MainPanel, BorderLayout.CENTER);
         this.setVisible(true);
+    }
+
+    @Override
+    public void show(JPanel board, Player playerNow, PlayingField playingField){
+
     }
 }

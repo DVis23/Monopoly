@@ -1,6 +1,9 @@
 package ru.vsu.cs.gui.gui_cells;
 
+import ru.vsu.cs.Player;
+import ru.vsu.cs.PlayingField;
 import ru.vsu.cs.cells.UtilityCompany;
+import ru.vsu.cs.gui.GUICell;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -11,18 +14,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
-public class GUIUtilityCompany extends JPanel {
+public class GUIUtilityCompany extends GUICell {
 
     private JPanel MainPanel;
     private JTextArea UCInform;
+    private UtilityCompany utilityCompany;
 
     public GUIUtilityCompany(UtilityCompany utilityCompany) throws IOException {
-        this.setPreferredSize(new Dimension(70, 70));
-        this.setLayout(new BorderLayout());
-        this.setLayout(new BorderLayout(0,0));
-        this.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-        this.setBorder(new LineBorder(Color.BLACK));
-
+        this.utilityCompany = utilityCompany;
         MainPanel = new JPanel();
         MainPanel.setPreferredSize(new Dimension(70, 70));
         MainPanel.setBackground(Color.WHITE);
@@ -65,5 +64,17 @@ public class GUIUtilityCompany extends JPanel {
 
         this.add(MainPanel, BorderLayout.CENTER);
         this.setVisible(true);
+    }
+
+    @Override
+    public void show(JPanel board, Player playerNow, PlayingField playingField){
+        int o = 3;
+        if (utilityCompany.getOwner() == null) {
+            if (playerNow.getLiberalValues() > utilityCompany.getCost()) {
+                o = JOptionPane.showConfirmDialog(board, "Купить коммунальную службу?");
+            }
+            if (o == 0)
+                utilityCompany.action2(playerNow, playingField);
+        }
     }
 }
