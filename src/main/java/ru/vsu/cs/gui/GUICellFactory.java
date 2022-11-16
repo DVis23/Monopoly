@@ -5,8 +5,27 @@ import ru.vsu.cs.cells.*;
 import ru.vsu.cs.gui.gui_cells.*;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
 
-public class GUICellFactory {
+public class GUICellFactory {/*
+    static Map<Class<? extends Cell>, Function<Cell, String>> registeredTypes;
+
+    public static <T extends Cell> void registerType(Class<T> type, Function<T, String> creator) {
+        //noinspection unchecked
+        GUICellFactory.registeredTypes.put(type, (cell) -> creator.apply((T)cell));
+    }
+
+    public static String createGuiCell(Cell cell) {
+        return Optional.ofNullable(
+                registeredTypes.get(cell.getClass()).apply(cell)
+        ).orElseThrow(
+                () -> new RuntimeException("Unknown cell type " + cell.getClass().toString())
+        );
+    }*/
+
+
     public static GUICell createGUICell(Cell cell) throws IOException {
         String className = cell.getClass().getName();
         switch (className) {

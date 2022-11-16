@@ -1,0 +1,137 @@
+{
+    "Street": [
+        {
+            "name": "Житная улица",
+            "color": "BROWN",
+            "cost": 600,
+            "cell": 1
+        },
+        {
+            "name": "Нагатинская улица",
+            "color": "BROWN",
+            "cost": 600,
+            "cell": 3
+        },
+        {
+            "name": "Варшавское шоссе",
+            "color": "WHITE",
+            "cost": 1000,
+            "cell": 6
+        },
+        {
+            "name": "Улица Огарева",
+            "color": "WHITE",
+            "cost": 1000,
+            "cell": 8
+        },
+        {
+            "name": "Первая Парковая",
+            "color": "WHITE",
+            "cost": 1200,
+            "cell": 9
+        },
+        {
+            "name": "Улица Полянка",
+            "color": "ROSE",
+            "cost": 1400,
+            "cell": 11
+        },
+        {
+            "name": "Улица Сретенка",
+            "color": "ROSE",
+            "cost": 1400,
+            "cell": 13
+        },
+        {
+            "name": "Ростовская набережная",
+            "color": "ROSE",
+            "cost": 1600,
+            "cell": 14
+        },
+        {
+            "name": "Рязанский проспект",
+            "color": "ORANGE",
+            "cost": 1800,
+            "cell": 16
+        },
+        {
+            "name": "Улица Вавилова",
+            "color": "ORANGE",
+            "cost": 1800,
+            "cell": 18
+        },
+        {
+            "name": "Рублевское шоссе",
+            "color": "ORANGE",
+            "cost": 2000,
+            "cell": 19
+        },
+        {
+            "name": "Улица Тверская",
+            "color": "RED",
+            "cost": 2000,
+            "cell": 21
+        },
+        {
+            "name": "Пушкинская улица",
+            "color": "RED",
+            "cost": 2200,
+            "cell": 23
+        },
+        {
+            "name": "Площадь Маяковского",
+            "color": "YELLOW",
+            "cost": 2400,
+            "cell": 24
+        },
+        {
+            "name": "Грузинский Вал",
+            "color": "YELLOW",
+            "cost": 2600,
+            "cell": 26
+        },
+        {
+            "name": "Новильский бульвар",
+            "color": "YELLOW",
+            "cost": 2600,
+            "cell": 27
+        },
+        {
+            "name": "Смоленская площадь",
+            "color": "YELLOW",
+            "cost": 2800,
+            "cell": 29
+        },
+        {
+            "name": "Улица Щусева",
+            "color": "GREEN",
+            "cost": 3000,
+            "cell": 31
+        },
+        {
+            "name": "Гоголевский бульвар",
+            "color": "GREEN",
+            "cost": 3000,
+            "cell": 32
+        },
+        {
+            "name": "Кутузовский проспект",
+            "color": "GREEN",
+            "cost": 3000,
+            "cell": 34
+        },
+        {
+            "name": "Малая Бронная",
+            "color": "BLUE",
+            "cost": 3500,
+            "cell": 37
+        },
+        {
+            "name": "Арбат",
+            "color": "BLUE",
+            "cost": 4000,
+            "cell": 39
+        }
+                
+    ]
+ }

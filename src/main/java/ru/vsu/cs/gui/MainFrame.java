@@ -1,5 +1,6 @@
 package ru.vsu.cs.gui;
 
+import org.json.simple.parser.ParseException;
 import ru.vsu.cs.Cell;
 import ru.vsu.cs.Game;
 import ru.vsu.cs.Player;
@@ -21,7 +22,7 @@ public class MainFrame extends JFrame {
     private Game game;
     private ArrayList<Player> players = new ArrayList<>();
     private ArrayList<InformPlayer> playersInform = new ArrayList<>();
-    private PlayingField playingField = new PlayingField();
+    private final PlayingField playingField;
     private Player playerNow;
     private JPanel panelMain;
     private JPanel board;
@@ -45,7 +46,7 @@ public class MainFrame extends JFrame {
 
     private ManagerFrame managerFrame = new ManagerFrame();
 
-    public MainFrame() throws IOException {
+    public MainFrame() throws IOException, ParseException {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("MONOPOLY");
         this.pack();

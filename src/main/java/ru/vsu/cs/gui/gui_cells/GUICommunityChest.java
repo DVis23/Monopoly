@@ -1,9 +1,12 @@
 package ru.vsu.cs.gui.gui_cells;
 
+import ru.vsu.cs.Cell;
 import ru.vsu.cs.Player;
 import ru.vsu.cs.PlayingField;
+import ru.vsu.cs.cells.Chance;
 import ru.vsu.cs.cells.CommunityChest;
 import ru.vsu.cs.gui.GUICell;
+import ru.vsu.cs.gui.GUICellFactory;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -15,21 +18,24 @@ import java.io.IOException;
 
 public class GUICommunityChest extends GUICell {
 
-    private JPanel MainPanel;
-    private CommunityChest communityChest;
+    private final CommunityChest communityChest;
+/*
+    static {
+        GUICellFactory.registerType(CommunityChest.class, c -> c.getClass().getName());
+    }*/
 
     public GUICommunityChest(CommunityChest communityChest) throws IOException {
         this.communityChest = communityChest;
-        MainPanel = new JPanel();
-        MainPanel.setPreferredSize(new Dimension(70, 70));
-        MainPanel.setBackground(Color.WHITE);
+        JPanel mainPanel = new JPanel();
+        mainPanel.setPreferredSize(new Dimension(70, 70));
+        mainPanel.setBackground(Color.WHITE);
 
         BufferedImage myPicture = ImageIO.read(new File("image/community_chest_icon.png"));
         JLabel picLabel = new JLabel(new ImageIcon(myPicture));
-        MainPanel.add(picLabel);
+        mainPanel.add(picLabel);
 
 
-        this.add(MainPanel, BorderLayout.CENTER);
+        this.add(mainPanel, BorderLayout.CENTER);
         this.setVisible(true);
     }
 

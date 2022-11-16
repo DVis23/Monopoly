@@ -1,9 +1,12 @@
 package ru.vsu.cs.gui.gui_cells;
 
+import ru.vsu.cs.Cell;
 import ru.vsu.cs.Player;
 import ru.vsu.cs.PlayingField;
+import ru.vsu.cs.cells.RailRoad;
 import ru.vsu.cs.cells.StartCell;
 import ru.vsu.cs.gui.GUICell;
+import ru.vsu.cs.gui.GUICellFactory;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -14,20 +17,22 @@ import java.io.File;
 import java.io.IOException;
 
 public class GUIStartCell extends GUICell {
+/*
+    static {
+        GUICellFactory.registerType(StartCell.class, c -> c.getClass().getName());
+    }*/
 
-    private JPanel MainPanel;
+    public GUIStartCell(StartCell cell) throws IOException {
 
-    public GUIStartCell(StartCell startCell) throws IOException {
-
-        MainPanel = new JPanel();
-        MainPanel.setPreferredSize(new Dimension(70, 70));
-        MainPanel.setBackground(Color.WHITE);
+        JPanel mainPanel = new JPanel();
+        mainPanel.setPreferredSize(new Dimension(70, 70));
+        mainPanel.setBackground(Color.WHITE);
 
         BufferedImage myPicture = ImageIO.read(new File("image/arrow_icon.png"));
         JLabel picLabel = new JLabel(new ImageIcon(myPicture));
-        MainPanel.add(picLabel);
+        mainPanel.add(picLabel);
 
-        this.add(MainPanel, BorderLayout.CENTER);
+        this.add(mainPanel, BorderLayout.CENTER);
         this.setVisible(true);
     }
 
