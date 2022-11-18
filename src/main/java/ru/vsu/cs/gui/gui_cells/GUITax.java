@@ -3,6 +3,7 @@ package ru.vsu.cs.gui.gui_cells;
 import ru.vsu.cs.Cell;
 import ru.vsu.cs.Player;
 import ru.vsu.cs.PlayingField;
+import ru.vsu.cs.cells.StartCell;
 import ru.vsu.cs.cells.Street;
 import ru.vsu.cs.cells.Tax;
 import ru.vsu.cs.gui.GUICell;
@@ -15,12 +16,21 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.function.Function;
 
 public class GUITax extends GUICell {
-/*
+
     static {
-        GUICellFactory.registerType(Tax.class, c -> c.getClass().getName());
-    }*/
+        Function<Tax, GUITax> function = c -> {
+            try {
+                return new GUITax(c);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        };
+        GUICellFactory.registerType(Tax.class, function);
+    }
 
 
     public GUITax(Tax cell) throws IOException {

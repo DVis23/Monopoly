@@ -15,14 +15,23 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.function.Function;
 
 public class GUICommunityChest extends GUICell {
 
     private final CommunityChest communityChest;
-/*
+
     static {
-        GUICellFactory.registerType(CommunityChest.class, c -> c.getClass().getName());
-    }*/
+        Function<CommunityChest, GUICommunityChest> function = c -> {
+            try {
+                return new GUICommunityChest(c);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        };
+        GUICellFactory.registerType(CommunityChest.class, function);
+    }
 
     public GUICommunityChest(CommunityChest communityChest) throws IOException {
         this.communityChest = communityChest;

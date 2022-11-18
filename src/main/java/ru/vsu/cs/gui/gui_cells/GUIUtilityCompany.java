@@ -16,14 +16,23 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.function.Function;
 
 public class GUIUtilityCompany extends GUICell {
 
     private final UtilityCompany utilityCompany;
-/*
+
     static {
-        GUICellFactory.registerType(UtilityCompany.class, c -> c.getClass().getName());
-    }*/
+        Function<UtilityCompany, GUIUtilityCompany> function = c -> {
+            try {
+                return new GUIUtilityCompany(c);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        };
+        GUICellFactory.registerType(UtilityCompany.class, function);
+    }
 
     public GUIUtilityCompany(UtilityCompany utilityCompany) throws IOException {
         this.utilityCompany = utilityCompany;

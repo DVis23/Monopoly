@@ -3,6 +3,7 @@ package ru.vsu.cs.gui.gui_cells;
 import ru.vsu.cs.Cell;
 import ru.vsu.cs.Player;
 import ru.vsu.cs.PlayingField;
+import ru.vsu.cs.cells.GoToJail;
 import ru.vsu.cs.cells.StartCell;
 import ru.vsu.cs.cells.Street;
 import ru.vsu.cs.gui.GUICell;
@@ -11,14 +12,17 @@ import ru.vsu.cs.gui.GUICellFactory;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.io.IOException;
+import java.util.function.Function;
 
 public class GUIStreet extends GUICell {
 
     private final Street street;
-/*
+
     static {
-        GUICellFactory.registerType(Street.class, c -> c.getClass().getName());
-    }*/
+        Function<Street, GUIStreet> function = c -> new GUIStreet(c);
+        GUICellFactory.registerType(Street.class, function);
+    }
 
     public GUIStreet(Street  street)  {
         this.street = street;

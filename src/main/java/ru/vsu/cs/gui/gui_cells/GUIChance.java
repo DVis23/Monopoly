@@ -18,10 +18,18 @@ import java.util.function.Function;
 public class GUIChance extends GUICell {
 
     private final Chance chance;
-/*
+
     static {
-        GUICellFactory.registerType(Chance.class, c -> c.getClass().getName());
-    }*/
+        Function<Chance, GUIChance> function = c -> {
+            try {
+                return new GUIChance(c);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        };
+        GUICellFactory.registerType(Chance.class, function);
+    }
 
     public GUIChance(Chance chance) throws IOException {
         this.chance = chance;

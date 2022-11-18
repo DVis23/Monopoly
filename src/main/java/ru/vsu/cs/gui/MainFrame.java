@@ -1,6 +1,8 @@
 package ru.vsu.cs.gui;
 
+import javassist.tools.reflect.Reflection;
 import org.json.simple.parser.ParseException;
+import org.reflections.Reflections;
 import ru.vsu.cs.Cell;
 import ru.vsu.cs.Game;
 import ru.vsu.cs.Player;
@@ -15,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class MainFrame extends JFrame {
@@ -258,14 +261,14 @@ public class MainFrame extends JFrame {
 
     private void drawBoardPanel() throws IOException {
         Cell [] cells = playingField.getCells();
-        drawPanel(panelNorth, 0, cells.length/4);
-        drawPanel(panelEast, cells.length/4 + 1, cells.length/2 - 1);
-        drawPanel(panelSouth, cells.length/4*3,cells.length/2);
-        drawPanel(panelWest, cells.length - 1, cells.length/4*3 + 1);
+        GUICell [] guiCells = guiCells();
+        drawPanel(panelNorth, 0, cells.length/4, guiCells);
+        drawPanel(panelEast, cells.length/4 + 1, cells.length/2 - 1, guiCells);
+        drawPanel(panelSouth, cells.length/4*3,cells.length/2, guiCells);
+        drawPanel(panelWest, cells.length - 1, cells.length/4*3 + 1, guiCells);
     }
 
-    private void drawPanel(JPanel panel, int a, int b) throws IOException {
-        GUICell [] guiCells = guiCells();
+    private void drawPanel(JPanel panel, int a, int b, GUICell [] guiCells) throws IOException {
         if (a < b) {
             for (int i = a; i <= b; i++) {
                 panel.add(guiCells[i]);
@@ -280,10 +283,23 @@ public class MainFrame extends JFrame {
     private GUICell [] guiCells() throws IOException {
         Cell [] cells = playingField.getCells();
         GUICell [] guiCells = new GUICell[cells.length];
+
+        var r = new Reflections("ru.vsu.cs.gui.gui_cells");
+        var l = r.getSubTypesOf(GUICell.class);
+        Arrays.stream(l.toArray(Class[]::new)).map(x -> x.getName()).forEach(x -> {
+            try {
+                Class.forName(x);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+
+        GUICellFactory.getMap();
         for (int i = 0; i < cells.length; i++) {
-            GUICell guiCell = GUICellFactory.createGUICell(cells[i]);
+            GUICell guiCell = GUICellFactory.createGuiCell(cells[i]);
             guiCells[i] = guiCell;
         }
+
         return guiCells;
     }
 

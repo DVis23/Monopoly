@@ -3,6 +3,7 @@ package ru.vsu.cs.gui.gui_cells;
 import ru.vsu.cs.Cell;
 import ru.vsu.cs.Player;
 import ru.vsu.cs.PlayingField;
+import ru.vsu.cs.cells.Chance;
 import ru.vsu.cs.cells.FreeParking;
 import ru.vsu.cs.cells.GoToJail;
 import ru.vsu.cs.gui.GUICell;
@@ -15,12 +16,21 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.function.Function;
 
 public class GUIGoToJail extends GUICell {
-/*
+
     static {
-        GUICellFactory.registerType(GoToJail.class, c -> c.getClass().getName());
-    }*/
+        Function<GoToJail, GUIGoToJail> function = c -> {
+            try {
+                return new GUIGoToJail(c);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        };
+        GUICellFactory.registerType(GoToJail.class, function);
+    }
 
     public GUIGoToJail(GoToJail cell) throws IOException {
 

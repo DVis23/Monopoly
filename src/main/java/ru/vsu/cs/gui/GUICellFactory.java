@@ -5,41 +5,28 @@ import ru.vsu.cs.cells.*;
 import ru.vsu.cs.gui.gui_cells.*;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 
-public class GUICellFactory {/*
-    static Map<Class<? extends Cell>, Function<Cell, String>> registeredTypes;
+public class GUICellFactory {
+    static Map<Class<? extends Cell>, Function<Cell, GUICell>> registeredTypes = new HashMap<>();
 
-    public static <T extends Cell> void registerType(Class<T> type, Function<T, String> creator) {
+    public static <T extends Cell, F extends GUICell> void registerType(Class<T> type, Function<T, F> creator) {
         //noinspection unchecked
         GUICellFactory.registeredTypes.put(type, (cell) -> creator.apply((T)cell));
     }
 
-    public static String createGuiCell(Cell cell) {
+    public static GUICell createGuiCell(Cell cell) {
         return Optional.ofNullable(
                 registeredTypes.get(cell.getClass()).apply(cell)
         ).orElseThrow(
                 () -> new RuntimeException("Unknown cell type " + cell.getClass().toString())
         );
-    }*/
+    }
 
-
-    public static GUICell createGUICell(Cell cell) throws IOException {
-        String className = cell.getClass().getName();
-        switch (className) {
-            case "ru.vsu.cs.cells.Chance" : return new GUIChance((Chance) cell);
-            case "ru.vsu.cs.cells.CommunityChest" : return new GUICommunityChest((CommunityChest) cell);
-            case "ru.vsu.cs.cells.FreeParking" : return new GUIFreeParking((FreeParking) cell);
-            case "ru.vsu.cs.cells.GoToJail" : return new GUIGoToJail((GoToJail) cell);
-            case "ru.vsu.cs.cells.Jail" : return new GUIJail((Jail) cell);
-            case "ru.vsu.cs.cells.RailRoad" : return new GUIRailRoad((RailRoad) cell);
-            case "ru.vsu.cs.cells.StartCell" : return new GUIStartCell((StartCell) cell);
-            case "ru.vsu.cs.cells.Street" : return new GUIStreet((Street) cell);
-            case "ru.vsu.cs.cells.Tax" : return new GUITax((Tax) cell);
-            case "ru.vsu.cs.cells.UtilityCompany" : return new GUIUtilityCompany((UtilityCompany) cell);
-            default: return null;
+    public static void getMap() {
+        for (Class c : registeredTypes.keySet()) {
+            System.out.println(c.toString() + "   " + registeredTypes.get(c));
         }
     }
 }
