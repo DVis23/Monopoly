@@ -1,6 +1,8 @@
 package ru.vsu.cs.gui;
 
+import org.reflections.Reflections;
 import ru.vsu.cs.Cell;
+import ru.vsu.cs.PlayingField;
 import ru.vsu.cs.cells.*;
 import ru.vsu.cs.gui.gui_cells.*;
 
@@ -24,9 +26,25 @@ public class GUICellFactory {
         );
     }
 
-    public static void getMap() {
-        for (Class c : registeredTypes.keySet()) {
-            System.out.println(c.toString() + "   " + registeredTypes.get(c));
+    public static GUICell [] guiCells(PlayingField playingField) throws IOException {
+        Cell [] cells = playingField.getCells();
+        GUICell [] guiCells = new GUICell[cells.length];
+
+        var r = new Reflections("ru.vsu.cs.gui.gui_cells");
+        var l = r.getSubTypesOf(GUICell.class);
+        Arrays.stream(l.toArray(Class[]::new)).map(x -> x.getName()).forEach(x -> {
+            try {
+                Class.forName(x);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+
+        for (int i = 0; i < cells.length; i++) {
+            GUICell guiCell = GUICellFactory.createGuiCell(cells[i]);
+            guiCells[i] = guiCell;
         }
+
+        return guiCells;
     }
 }

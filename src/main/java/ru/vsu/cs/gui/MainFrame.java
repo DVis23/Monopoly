@@ -11,6 +11,7 @@ import ru.vsu.cs.cells.*;
 import ru.vsu.cs.gui.gui_cells.*;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -49,130 +50,18 @@ public class MainFrame extends JFrame {
 
     private ManagerFrame managerFrame = new ManagerFrame();
 
-    public MainFrame() throws IOException, ParseException {
+    public MainFrame(ArrayList<Player> players) throws IOException, ParseException {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("MONOPOLY");
         this.pack();
-        this.setSize(1070, 810);
+        this.setSize(1070, 798);
         this.setResizable(false);
+        this.players = players;
 
         panelMain = new JPanel();
         this.setContentPane(panelMain);
         this.getContentPane().setLayout(new BorderLayout());
-
-        Font font = new Font("BOLD", Font.BOLD, 20);
-
-        panelRight = new JPanel();
-        panelRight.setPreferredSize(new Dimension(300, 770));
-        panelRight.setBackground(new Color(61,60,59));
-
-        panelButton = new JPanel();
-        panelButton.setPreferredSize(new Dimension(300, 200));
-        panelButton.setBackground(new Color(61,60,59));
-        makeAMove = new JButton("Сделать ход");
-        makeAMove.setFont(font);
-        makeAMove.setBackground(Color.GRAY);
-        manager = new JButton("Менеджер");
-        manager.setFont(font);
-        manager.setBackground(Color.GRAY);
-
-        board = new JPanel();
-        board.setPreferredSize(new Dimension(770, 770));
-        board.setLayout(new BorderLayout(0,0));
-        board.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-
-
-        GridLayout layout = new GridLayout(6, 1, 0, 0);
-
-        panelPlayer = new JPanel();
-        panelPlayer.setLayout(layout);
-        panelPlayer.setPreferredSize(new Dimension(250, 400));
-        panelPlayer.setBackground(new Color(61,60,59));
-
-
-
-        makeAMove.setPreferredSize(new Dimension(250, 40));
-        panelButton.add(makeAMove);
-        manager.setPreferredSize(new Dimension(250, 40));
-        panelButton.add(manager);
-
-        panelRight.add(panelButton, BorderLayout.NORTH);
-        panelRight.add(panelPlayer, BorderLayout.SOUTH);
-
-        GridLayout layoutVer = new GridLayout(9, 1, 0, 0);
-        GridLayout layoutHor= new GridLayout(1, 11, 0, 0);
-
-        panelWest = new JPanel();
-        panelWest.setBackground(Color.BLACK);
-        panelWest.setPreferredSize(new Dimension(70, 630));
-        panelWest.setLayout(new BorderLayout(0,0));
-        panelWest.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-        panelWest.setLayout(layoutVer);
-        board.add(panelWest, BorderLayout.WEST);
-
-        panelEast = new JPanel();
-        panelEast.setBackground(Color.BLACK);
-        panelEast.setPreferredSize(new Dimension(70, 630));
-        panelEast.setLayout(new BorderLayout(0,0));
-        panelEast.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-        panelEast.setLayout(layoutVer);
-        board.add(panelEast, BorderLayout.EAST);
-
-        panelSouth = new JPanel();
-        panelSouth.setBackground(Color.BLACK);
-        panelSouth.setPreferredSize(new Dimension(770, 70));
-        panelSouth.setLayout(new BorderLayout(0,0));
-        panelSouth.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-        panelSouth.setLayout(layoutHor);
-        board.add(panelSouth, BorderLayout.SOUTH);
-
-        panelNorth = new JPanel();
-        panelNorth.setBackground(Color.BLACK);
-        panelNorth.setPreferredSize(new Dimension(770, 70));
-        panelNorth.setLayout(new BorderLayout(0,0));
-        panelNorth.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-        panelNorth.setLayout(layoutHor);
-        board.add(panelNorth, BorderLayout.NORTH);
-
-        panelCenter = new JPanel();
-        panelCenter.setPreferredSize(new Dimension(630, 630));
-        panelCenter.setLayout(new BorderLayout(0,0));
-        panelCenter.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-        board.add(panelCenter, BorderLayout.CENTER);
-
-        panelWestMini = new JPanel();
-        panelWestMini.setBackground(Color.BLACK);
-        panelWestMini.setPreferredSize(new Dimension(59, 524));
-        panelWestMini.setLayout(new BorderLayout(0,0));
-        panelWestMini.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-        panelWestMini.setLayout(layoutVer);
-        panelCenter.add(panelWestMini, BorderLayout.WEST);
-
-        panelEastMini = new JPanel();
-        panelEastMini.setBackground(Color.BLACK);
-        panelEastMini.setPreferredSize(new Dimension(59, 524));
-        panelEastMini.setLayout(new BorderLayout(0,0));
-        panelEastMini.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-        panelEastMini.setLayout(layoutVer);
-        panelCenter.add(panelEastMini, BorderLayout.EAST);
-
-        panelSouthMini = new JPanel();
-        panelSouthMini.setBackground(Color.BLACK);
-        panelSouthMini.setPreferredSize(new Dimension(630, 59));
-        panelSouthMini.setLayout(new BorderLayout(0,0));
-        panelSouthMini.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-        panelSouthMini.setLayout(layoutHor);
-        panelCenter.add(panelSouthMini, BorderLayout.SOUTH);
-
-        panelNorthMini = new JPanel();
-        panelNorthMini.setBackground(Color.BLACK);
-        panelNorthMini.setPreferredSize(new Dimension(630, 59));
-        panelNorthMini.setLayout(new BorderLayout(0,0));
-        panelNorthMini.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-        panelNorthMini.setLayout(layoutHor);
-        panelCenter.add(panelNorthMini, BorderLayout.NORTH);
-
-
+        /*
         int numberPlayers = 0;
         while(numberPlayers <= 1 || numberPlayers > 7) {
             String numberPlayersStr = JOptionPane.showInputDialog(this, "How many players?");
@@ -195,15 +84,119 @@ public class MainFrame extends JFrame {
             }
             Player player = new Player(name, 7500);
             players.add(player);
-        }
+        }*/
         game = new Game(players);
         playingField = game.getPlayingField();
 
-        playerNow = players.get(0);
+        Font font = new Font("BOLD", Font.BOLD, 20);
+        panelRight = new JPanel();
+        panelRight.setPreferredSize(new Dimension(300, 770));
+        panelRight.setBackground(new Color(61,60,59));
+
+        panelButton = new JPanel();
+        panelButton.setPreferredSize(new Dimension(300, 200));
+        panelButton.setBackground(new Color(61,60,59));
+        makeAMove = new JButton("Сделать ход");
+        makeAMove.setFont(font);
+        makeAMove.setBackground(Color.GRAY);
+        manager = new JButton("Менеджер");
+        manager.setFont(font);
+        manager.setBackground(Color.GRAY);
+
+        GridLayout layout = new GridLayout(6, 1, 0, 0);
+        panelPlayer = new JPanel();
+        panelPlayer.setLayout(layout);
+        panelPlayer.setPreferredSize(new Dimension(250, 400));
+        panelPlayer.setBackground(new Color(61,60,59));
+
+        makeAMove.setPreferredSize(new Dimension(250, 40));
+        panelButton.add(makeAMove);
+        manager.setPreferredSize(new Dimension(250, 40));
+        panelButton.add(manager);
+
+        panelRight.add(panelButton, BorderLayout.NORTH);
+        panelRight.add(panelPlayer, BorderLayout.SOUTH);
+
+        board = new JPanel();
+        int sizeBoard = 770;
+        board.setPreferredSize(new Dimension(sizeBoard, sizeBoard));
+        board.setLayout(new BorderLayout(0,0));
+        board.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+
+        int countCell = playingField.getConstCell();
+        int countVerCell = countCell/4 - 1;
+        int countHorCell = countCell/4 + 1;
+        int sizeCell =  sizeBoard/countHorCell;
+        int sizeMiniBoard = sizeBoard - 2*sizeCell;
+        int sizeMiniCell = sizeMiniBoard/countHorCell;
+
+        GridLayout layoutVer = new GridLayout(countVerCell, 1, 0, 0);
+        GridLayout layoutHor= new GridLayout(1, countHorCell, 0, 0);
+
+        panelWest = new JPanel();
+        panelWest.setBackground(Color.BLACK);
+        panelWest.setPreferredSize(new Dimension(sizeCell, sizeBoard - sizeCell*2));
+        panelWest.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+        panelWest.setLayout(layoutVer);
+        board.add(panelWest, BorderLayout.WEST);
+
+        panelEast = new JPanel();
+        panelEast.setBackground(Color.BLACK);
+        panelEast.setPreferredSize(new Dimension(sizeCell, sizeBoard - sizeCell*2));
+        panelEast.setLayout(layoutVer);
+        board.add(panelEast, BorderLayout.EAST);
+
+        panelSouth = new JPanel();
+        panelSouth.setBackground(Color.BLACK);
+        panelSouth.setPreferredSize(new Dimension(sizeBoard, sizeCell));
+        panelSouth.setLayout(layoutHor);
+        board.add(panelSouth, BorderLayout.SOUTH);
+
+        panelNorth = new JPanel();
+        panelNorth.setBackground(Color.BLACK);
+        panelNorth.setPreferredSize(new Dimension(sizeBoard, sizeCell));
+        panelNorth.setLayout(layoutHor);
+        board.add(panelNorth, BorderLayout.NORTH);
+
+        panelCenter = new JPanel();
+        panelCenter.setPreferredSize(new Dimension(sizeMiniBoard, sizeMiniBoard));
+        panelCenter.setLayout(new BorderLayout(0,0));
+        panelCenter.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        board.add(panelCenter, BorderLayout.CENTER);
+
+        panelWestMini = new JPanel();
+        panelWestMini.setBackground(Color.BLACK);
+        panelWestMini.setPreferredSize(new Dimension(sizeMiniCell, sizeMiniBoard - 2*sizeMiniCell));
+        panelWestMini.setLayout(layoutVer);
+        panelWestMini.setBorder(BorderFactory.createEmptyBorder(-4, -1, -4, 0));
+        panelCenter.add(panelWestMini, BorderLayout.WEST);
+
+        panelEastMini = new JPanel();
+        panelEastMini.setBackground(Color.BLACK);
+        panelEastMini.setPreferredSize(new Dimension(sizeMiniCell, sizeMiniBoard - 2*sizeMiniCell));
+        panelEastMini.setLayout(layoutVer);
+        panelEastMini.setBorder(BorderFactory.createEmptyBorder(-4, 0, -4, -1));
+        panelCenter.add(panelEastMini, BorderLayout.EAST);
+
+        panelSouthMini = new JPanel();
+        panelSouthMini.setBackground(Color.BLACK);
+        panelSouthMini.setPreferredSize(new Dimension(sizeMiniBoard, sizeMiniCell));
+        panelSouthMini.setLayout(layoutHor);
+        panelSouthMini.setBorder(BorderFactory.createEmptyBorder(0, -4, 0, -4));
+        panelCenter.add(panelSouthMini, BorderLayout.SOUTH);
+
+        panelNorthMini = new JPanel();
+        panelNorthMini.setBackground(Color.BLACK);
+        panelNorthMini.setPreferredSize(new Dimension(sizeMiniBoard, sizeMiniCell));
+        panelNorthMini.setLayout(layoutHor);
+        panelNorthMini.setBorder(BorderFactory.createEmptyBorder(0, -4, 0, -4));
+        panelCenter.add(panelNorthMini, BorderLayout.NORTH);
 
         drawPlayersBoard();
         drawBoardPanel();
         drawBoardMini();
+
+        playerNow = players.get(0);
 
         makeAMove.addActionListener(new ActionListener() {
             @Override
@@ -222,7 +215,7 @@ public class MainFrame extends JFrame {
 
                 GUICell [] guiCells = new GUICell[0];
                 try {
-                    guiCells = guiCells();
+                    guiCells = GUICellFactory.guiCells(playingField);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -254,14 +247,13 @@ public class MainFrame extends JFrame {
 
         this.getContentPane().add(board, BorderLayout.WEST);
         this.getContentPane().add(panelRight, BorderLayout.EAST);
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
-
-
     }
 
     private void drawBoardPanel() throws IOException {
         Cell [] cells = playingField.getCells();
-        GUICell [] guiCells = guiCells();
+        GUICell [] guiCells = GUICellFactory.guiCells(playingField);
         drawPanel(panelNorth, 0, cells.length/4, guiCells);
         drawPanel(panelEast, cells.length/4 + 1, cells.length/2 - 1, guiCells);
         drawPanel(panelSouth, cells.length/4*3,cells.length/2, guiCells);
@@ -278,29 +270,6 @@ public class MainFrame extends JFrame {
                 panel.add(guiCells[i]);
             }
         }
-    }
-
-    private GUICell [] guiCells() throws IOException {
-        Cell [] cells = playingField.getCells();
-        GUICell [] guiCells = new GUICell[cells.length];
-
-        var r = new Reflections("ru.vsu.cs.gui.gui_cells");
-        var l = r.getSubTypesOf(GUICell.class);
-        Arrays.stream(l.toArray(Class[]::new)).map(x -> x.getName()).forEach(x -> {
-            try {
-                Class.forName(x);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        });
-
-        GUICellFactory.getMap();
-        for (int i = 0; i < cells.length; i++) {
-            GUICell guiCell = GUICellFactory.createGuiCell(cells[i]);
-            guiCells[i] = guiCell;
-        }
-
-        return guiCells;
     }
 
     private void drawBoardMini() {
@@ -327,7 +296,7 @@ public class MainFrame extends JFrame {
     private void drawCellMini(JPanel panel, int i, ArrayList<Player> players, GridLayout layout) {
         JPanel panelMini = new JPanel();
         panelMini.setLayout(layout);
-        panelMini.setBorder(new LineBorder(Color.BLACK));
+        panelMini.setBorder(new LineBorder(Color.BLACK, 1));
         panelMini.setBackground(Color.WHITE);
         for (int j = 0; j < players.size(); j++) {
             if(players.get(j).getStep() == i) {

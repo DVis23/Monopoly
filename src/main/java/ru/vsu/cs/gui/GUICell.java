@@ -11,10 +11,8 @@ import java.awt.*;
 public class GUICell extends JPanel {
 
     public GUICell() {
-        this.setLayout(new BorderLayout());
         this.setLayout(new BorderLayout(0,0));
-        this.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-        this.setBorder(new LineBorder(Color.BLACK));
+        this.setBorder(new LineBorder(Color.BLACK, 1));
     }
 
     public void show(JPanel board, Player playerNow, PlayingField playingField){
