@@ -22,7 +22,7 @@ public class ContentPanel extends JPanel implements KeyListener {
     }
 
 
-    private String [] menus = new String [] {"НОВАЯ ИГРА", "НАСТРОЙКИ", "ВЫЙТИ"};
+    private final String [] menus = new String [] {"НОВАЯ ИГРА", "НАСТРОЙКИ", "ВЫЙТИ"};
 
     private int focusIndex;
 

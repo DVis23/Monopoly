@@ -16,16 +16,20 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.List.*;
 
 
 public class MainFrame extends JFrame {
 
     private Game game;
-    private ArrayList<Player> players = new ArrayList<>();
+    private ArrayList<Player> players;
     private ArrayList<InformPlayer> playersInform = new ArrayList<>();
+    private Map<Player, Color> map;
     private final PlayingField playingField;
     private Player playerNow;
     private JPanel panelMain;
@@ -35,6 +39,7 @@ public class MainFrame extends JFrame {
     private JPanel panelRight;
     private JButton makeAMove;
     private JButton manager;
+    private JButton back;
 
     private JPanel panelWest;
     private JPanel panelNorth;
@@ -50,69 +55,65 @@ public class MainFrame extends JFrame {
 
     private ManagerFrame managerFrame = new ManagerFrame();
 
-    public MainFrame(ArrayList<Player> players) throws IOException, ParseException {
+    private static Font font = new Font("BOLD", Font.BOLD, 20);
+
+    static {
+        File fontFile2 = new File("font\\Advanced.ttf");
+        try {
+            Font fontNew = Font.createFont(Font.TRUETYPE_FONT, fontFile2);
+            font = fontNew.deriveFont(40f);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public MainFrame(Map<Player, Color> map, int wight, int height) throws IOException, ParseException {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("MONOPOLY");
         this.pack();
-        this.setSize(1070, 798);
+        this.setSize(wight, height);
         this.setResizable(false);
-        this.players = players;
+        this.map = map;
+        players = new ArrayList<>(map.keySet());
+
 
         panelMain = new JPanel();
         this.setContentPane(panelMain);
         this.getContentPane().setLayout(new BorderLayout());
-        /*
-        int numberPlayers = 0;
-        while(numberPlayers <= 1 || numberPlayers > 7) {
-            String numberPlayersStr = JOptionPane.showInputDialog(this, "How many players?");
-            if (numberPlayersStr != null) {
-                try {
-                    numberPlayers = Integer.parseInt(numberPlayersStr);
-                    if (numberPlayers <= 1 || numberPlayers > 7) {
-                        JOptionPane.showMessageDialog(this, "Please input a number between two and six");
-                    }
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(this, "Please input a number");
-                }
-            }
-        }
 
-        for (int i = 0; i < numberPlayers; i++) {
-            String name = JOptionPane.showInputDialog(this, "Enter name");
-            if(name == null && players.size() == 0) {
-                System.exit(0);
-            }
-            Player player = new Player(name, 7500);
-            players.add(player);
-        }*/
         game = new Game(players);
         playingField = game.getPlayingField();
 
-        Font font = new Font("BOLD", Font.BOLD, 20);
         panelRight = new JPanel();
         panelRight.setPreferredSize(new Dimension(300, 770));
-        panelRight.setBackground(new Color(61,60,59));
+        panelRight.setBackground(new Color(23, 4, 41));
 
         panelButton = new JPanel();
         panelButton.setPreferredSize(new Dimension(300, 200));
-        panelButton.setBackground(new Color(61,60,59));
-        makeAMove = new JButton("Сделать ход");
-        makeAMove.setFont(font);
-        makeAMove.setBackground(Color.GRAY);
-        manager = new JButton("Менеджер");
-        manager.setFont(font);
-        manager.setBackground(Color.GRAY);
+        panelButton.setBackground(new Color(23, 4, 41));
+        makeAMove = new SuperButton("СДЕЛАТЬ ХОД");
+        manager = new SuperButton("МЕНЕДЖЕР");
+        back = new SuperButton("ВЫЙТИ");
+
 
         GridLayout layout = new GridLayout(6, 1, 0, 0);
         panelPlayer = new JPanel();
         panelPlayer.setLayout(layout);
         panelPlayer.setPreferredSize(new Dimension(250, 400));
-        panelPlayer.setBackground(new Color(61,60,59));
+        panelPlayer.setBackground(new Color(23, 4, 41));
 
-        makeAMove.setPreferredSize(new Dimension(250, 40));
+
         panelButton.add(makeAMove);
-        manager.setPreferredSize(new Dimension(250, 40));
         panelButton.add(manager);
+        panelButton.add(back);
+        makeAMove.setLocation(20, 10);
+        makeAMove.setSize(300, 60);
+        manager.setLocation(20, 60);
+        manager.setSize(230, 60);
+        back.setLocation(20, 110);
+        back.setSize(200, 60);
+
+        panelButton.setLayout(null);
 
         panelRight.add(panelButton, BorderLayout.NORTH);
         panelRight.add(panelPlayer, BorderLayout.SOUTH);
@@ -158,7 +159,7 @@ public class MainFrame extends JFrame {
         panelNorth.setLayout(layoutHor);
         board.add(panelNorth, BorderLayout.NORTH);
 
-        panelCenter = new JPanel();
+        panelCenter = new CenterPanel();
         panelCenter.setPreferredSize(new Dimension(sizeMiniBoard, sizeMiniBoard));
         panelCenter.setLayout(new BorderLayout(0,0));
         panelCenter.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -244,6 +245,14 @@ public class MainFrame extends JFrame {
             }
         });
 
+        back.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new StartFrame();
+            }
+        });
+
 
         this.getContentPane().add(board, BorderLayout.WEST);
         this.getContentPane().add(panelRight, BorderLayout.EAST);
@@ -251,6 +260,35 @@ public class MainFrame extends JFrame {
         this.setVisible(true);
     }
 
+    private class SuperButton extends JButton{
+
+        protected SuperButton(String str) {
+            this.setText(str);
+            this.setFont(font);
+            this.setForeground(Color.CYAN);
+            this.setBorderPainted(false);
+            this.setFocusPainted (false);
+            this.setContentAreaFilled(false);
+            this.setHorizontalAlignment(SwingConstants.LEFT);
+        }
+    }
+
+    private class CenterPanel extends JPanel{
+
+        protected CenterPanel(){
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            // TODO Auto-generated method stub
+            Graphics2D g2d = (Graphics2D)g;
+            Color c1 = new Color(30, 12, 48);
+            Color c2 = new Color(130, 39, 107);
+            GradientPaint gradient = new GradientPaint(0,700,c2,0,0,c1,true);
+            g2d.setPaint(gradient);
+            g2d.fillRect(0,0,700,700);
+        }
+    }
     private void drawBoardPanel() throws IOException {
         Cell [] cells = playingField.getCells();
         GUICell [] guiCells = GUICellFactory.guiCells(playingField);
@@ -301,12 +339,8 @@ public class MainFrame extends JFrame {
         for (int j = 0; j < players.size(); j++) {
             if(players.get(j).getStep() == i) {
                 JPanel player = new JPanel();
-                if (j == 0) player.setBackground(Color.RED);
-                else if (j == 1) player.setBackground(Color.PINK);
-                else if (j == 2) player.setBackground(Color.ORANGE);
-                else if (j == 3) player.setBackground(Color.MAGENTA);
-                else if (j == 4) player.setBackground(Color.CYAN);
-                else if (j == 5) player.setBackground(Color.YELLOW);
+                Color color = map.get(players.get(j));
+                player.setBackground(color);
                 panelMini.add(player);
             }
         }
@@ -347,19 +381,14 @@ public class MainFrame extends JFrame {
     private void drawPlayersBoard() {
         for (int i = 0; i < players.size(); i++) {
             InformPlayer informPlayer = new InformPlayer(players.get(i));
-            JPanel color = new JPanel();
-            color.setPreferredSize(new Dimension(11, 11));
-            if (i == 0) color.setBackground(Color.RED);
-            else if (i == 1) color.setBackground(Color.PINK);
-            else if (i == 2) color.setBackground(Color.ORANGE);
-            else if (i == 3) color.setBackground(Color.MAGENTA);
-            else if (i == 4) color.setBackground(Color.CYAN);
-            else if (i == 5) color.setBackground(Color.YELLOW);
-
+            JPanel colorPanel = new JPanel();
+            colorPanel.setPreferredSize(new Dimension(11, 11));
+            Color color = map.get(players.get(i));
+            colorPanel.setBackground(color);
             if (players.get(i).equals(playerNow)) {
                 informPlayer.textRed();
             }
-            informPlayer.add(color);
+            informPlayer.add(colorPanel);
             panelPlayer.add(informPlayer);
         }
     }
