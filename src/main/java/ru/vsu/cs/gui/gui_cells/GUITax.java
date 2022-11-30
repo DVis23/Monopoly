@@ -39,9 +39,7 @@ public class GUITax extends GUICell {
     public GUITax(Tax cell) throws IOException {
         mainPanel = new JPanel();
         mainPanel.setBackground(Color.BLACK);
-
         picture = ImageIO.read(new File("image\\74-10.png"));
-        JLabel picLabel = new JLabel(new ImageIcon(picture));
 
         this.add(mainPanel, BorderLayout.CENTER);
         this.setVisible(true);

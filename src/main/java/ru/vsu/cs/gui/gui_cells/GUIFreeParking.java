@@ -49,7 +49,7 @@ public class GUIFreeParking extends GUICell {
         mainPanel.setPreferredSize(new Dimension(70, 70));
         mainPanel.setBackground(Color.BLACK);
         mainPanel.setLayout(new BorderLayout());
-        picture = ImageIO.read(new File("image/75.gif"));
+        picture = ImageIO.read(new File("image/81.png"));
         this.add(mainPanel, BorderLayout.CENTER);
         this.setVisible(true);
     }

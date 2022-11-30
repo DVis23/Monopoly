@@ -17,7 +17,6 @@ public class ColorPanel extends JDialog{
 
         this.setSize(new Dimension(385, 370));
         this.setResizable(false);
-        //this.setBackground(Color.BLACK);
         setModal(true);
         JPanel mainPanel = new JPanel();
         JButton ok = new JButton("OK");

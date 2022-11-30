@@ -3,16 +3,13 @@ package ru.vsu.cs.gui.gui_cells;
 import ru.vsu.cs.Cell;
 import ru.vsu.cs.Player;
 import ru.vsu.cs.PlayingField;
-import ru.vsu.cs.cells.Tax;
 import ru.vsu.cs.cells.UtilityCompany;
 import ru.vsu.cs.gui.GUICell;
 import ru.vsu.cs.gui.GUICellFactory;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
@@ -82,7 +79,7 @@ public class GUIUtilityCompany extends GUICell {
         if (utilityCompany.getOwner() == null) {
             sb.append(utilityCompany.getCost());
         } else {
-            sb.append(" ").append(utilityCompany.getIncome()).append(" ");
+            sb.append(utilityCompany.getIncome()).append(" ");
             sb.append(utilityCompany.getOwner().getName());
         }
         String str = sb.toString();
@@ -98,8 +95,13 @@ public class GUIUtilityCompany extends GUICell {
             }
             if (o == 0) {
                 utilityCompany.action2(playerNow, playingField);
-                write();
             }
+        } else if (playerNow.equals(utilityCompany.getOwner())) {
+            JOptionPane.showMessageDialog(board, "Вы приехали с проверкой в свою коммунальную службу ");
+        } else {
+            JOptionPane.showMessageDialog(board, "Вы воспользовались услугами коммунальной службы игрока "
+                    + utilityCompany.getOwner().getName() + "," +
+                    "\n" + "заптатите ему " + utilityCompany.getIncome());
         }
     }
 

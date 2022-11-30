@@ -10,10 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 public class ParamsFrame extends JFrame {
     private final List<JTextField> textFields = new ArrayList<>();
@@ -275,7 +273,7 @@ public class ParamsFrame extends JFrame {
                     try {
                         int lv = Integer.parseInt(startLiberalValues.getText().trim());
                         if (lv > 1000) {
-                            Map<Player, Color> map = new HashMap<>();
+                            Map<Player, Color> map = new LinkedHashMap<>();
                             List<Color> colors = new ArrayList<>();
                             for (int i = 0; i < textFields.size(); i++) {
                                 Player player = new Player(textFields.get(i).getText(), lv);

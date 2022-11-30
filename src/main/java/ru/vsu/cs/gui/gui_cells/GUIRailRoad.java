@@ -92,8 +92,12 @@ public class GUIRailRoad extends GUICell {
             }
             if (o == 0) {
                 railRoad.action2(playerNow, playingField);
-                update();
             }
+        } else if (playerNow.equals(railRoad.getOwner())) {
+            JOptionPane.showMessageDialog(board, "Вы воспользовались своей железной дороге");
+        } else {
+            JOptionPane.showMessageDialog(board, "Вы воспользовались железной дороге игрока " + railRoad.getOwner().getName() + "," +
+                    "\n" + "заптатите ему " + railRoad.getIncome());
         }
     }
     @Override

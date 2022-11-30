@@ -1,17 +1,11 @@
 package ru.vsu.cs.gui;
 
-import javassist.tools.reflect.Reflection;
 import org.json.simple.parser.ParseException;
-import org.reflections.Reflections;
 import ru.vsu.cs.Cell;
 import ru.vsu.cs.Game;
 import ru.vsu.cs.Player;
 import ru.vsu.cs.PlayingField;
-import ru.vsu.cs.cells.*;
-import ru.vsu.cs.gui.gui_cells.*;
-
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -19,10 +13,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
-import java.util.List.*;
-
 
 public class MainFrame extends JFrame {
 
@@ -129,9 +120,9 @@ public class MainFrame extends JFrame {
         int countVerCell = countCell/4 - 1;
         int countHorCell = countCell/4 + 1;
         int sizeCell =  sizeBoard/countHorCell;
-        guiCells = GUICellFactory.guiCells(playingField, sizeCell, sizeCell);
         int sizeMiniBoard = sizeBoard - 2*sizeCell;
         int sizeMiniCell = sizeMiniBoard/countHorCell;
+        guiCells = GUICellFactory.guiCells(playingField, sizeCell, sizeCell);
 
         GridLayout layoutVer = new GridLayout(countVerCell, 1, 0, 0);
         GridLayout layoutHor= new GridLayout(1, countHorCell, 0, 0);
@@ -286,13 +277,13 @@ public class MainFrame extends JFrame {
     }
     private void drawBoardPanel() throws IOException {
         Cell [] cells = playingField.getCells();
-        drawPanel(panelNorth, 0, cells.length/4, guiCells);
-        drawPanel(panelEast, cells.length/4 + 1, cells.length/2 - 1, guiCells);
-        drawPanel(panelSouth, cells.length/4*3,cells.length/2, guiCells);
-        drawPanel(panelWest, cells.length - 1, cells.length/4*3 + 1, guiCells);
+        drawPanel(panelNorth, 0, cells.length/4);
+        drawPanel(panelEast, cells.length/4 + 1, cells.length/2 - 1);
+        drawPanel(panelSouth, cells.length/4*3,cells.length/2);
+        drawPanel(panelWest, cells.length - 1, cells.length/4*3 + 1);
     }
 
-    private void drawPanel(JPanel panel, int a, int b, GUICell [] guiCells) throws IOException {
+    private void drawPanel(JPanel panel, int a, int b) throws IOException {
         if (a < b) {
             for (int i = a; i <= b; i++) {
                 panel.add(guiCells[i]);
@@ -349,14 +340,6 @@ public class MainFrame extends JFrame {
         playerNow = players.get(i);
     }
 
-
-    private void clearBoard() {
-       panelNorth.removeAll();
-       panelEast.removeAll();
-       panelSouth.removeAll();
-       panelWest.removeAll();
-    }
-
     private void clearBoardMini() {
         panelNorthMini.removeAll();
         panelEastMini.removeAll();
@@ -366,7 +349,9 @@ public class MainFrame extends JFrame {
 
     private void updateView() throws IOException {
         updatePlayersBoard();
-        clearBoard();
+        for (int i = 0; i < guiCells.length; i++) {
+            guiCells[i].update();
+        }
         drawBoardPanel();
         clearBoardMini();
         drawBoardMini();

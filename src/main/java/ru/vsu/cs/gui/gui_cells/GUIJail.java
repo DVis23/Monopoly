@@ -39,7 +39,7 @@ public class GUIJail extends GUICell {
         mainPanel = new JPanel();
         mainPanel.setBackground(Color.BLACK);
         mainPanel.setLayout(new BorderLayout());
-        picture = ImageIO.read(new File("image/76.png"));
+        picture = ImageIO.read(new File("image\\76.png"));
         this.add(mainPanel, BorderLayout.CENTER);
         this.setVisible(true);
     }

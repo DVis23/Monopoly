@@ -18,7 +18,6 @@ import java.util.function.Function;
 
 public class GUIStreet extends GUICell {
     private static Font font1;
-    private static Font font2;
     private final Street street;
     private final JPanel mainPanel;
     private final JTextArea streetInform;
@@ -30,7 +29,6 @@ public class GUIStreet extends GUICell {
         try {
             Font fontNew = Font.createFont(Font.TRUETYPE_FONT, fontFile1);
             font1 = fontNew.deriveFont(6f);
-            font2 = fontNew.deriveFont(12f);
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
@@ -82,8 +80,6 @@ public class GUIStreet extends GUICell {
         }
 
         write();
-
-        mainPanel.add(streetInform, BorderLayout.SOUTH);
         this.add(mainPanel, BorderLayout.CENTER);
         this.setVisible(true);
     }
@@ -110,10 +106,15 @@ public class GUIStreet extends GUICell {
                 String str = " Купить '" + street.getName() + "'?";
                 o = JOptionPane.showConfirmDialog(board,  str);
             }
+        } else if (playerNow.equals(street.getOwner())) {
+            JOptionPane.showMessageDialog(board, "Вы на своей улице");
+        } else {
+            JOptionPane.showMessageDialog(board, "Вы на улице игрока " + street.getOwner().getName() + "," +
+                    "\n" + "заптатите ему " + street.getIncome());
         }
         if (o == 0) {
             street.action2(playerNow, playingField);
-            update();
+            //update();
         }
     }
 
@@ -131,7 +132,9 @@ public class GUIStreet extends GUICell {
             streetInform.setPreferredSize(new Dimension(x, y - 15));
         }
         streetInform.setFont(font1);
+        mainPanel.add(streetInform, BorderLayout.SOUTH);
     }
+
     @Override
     public void update(){
         write();

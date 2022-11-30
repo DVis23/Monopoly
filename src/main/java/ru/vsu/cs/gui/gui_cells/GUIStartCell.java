@@ -58,8 +58,9 @@ public class GUIStartCell extends GUICell {
 
     @Override
     public void show(JPanel board, Player playerNow, PlayingField playingField){
-
+        JOptionPane.showMessageDialog(board, "Вы на стартовом поле, отдыхайте.");
     }
+
     @Override
     public void setScaledInstance(int x, int y){
         mainPanel.setPreferredSize(new Dimension(x, y));
