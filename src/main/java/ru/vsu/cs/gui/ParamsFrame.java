@@ -16,14 +16,15 @@ import java.util.List;
 import java.util.Map;
 
 public class ParamsFrame extends JFrame {
-    private List<JTextField> textFields = new ArrayList<>();
-    private List<JButton> colorButtons = new ArrayList<>();
+    private final List<JTextField> textFields = new ArrayList<>();
+    private final List<JButton> colorButtons = new ArrayList<>();
     private JTextField startLiberalValues;
     private final Color colorBackground = new Color(23, 4, 41);
-    private static Font font1 = new Font("BOLD", Font.BOLD, 20);
-    private static Font font2 = new Font("BOLD", Font.BOLD, 30);
-    private static Font font3 = new Font("BOLD", Font.BOLD, 45);
-    private static Font font4 = new Font("BOLD", Font.BOLD, 40);
+    private static Font font1;
+    private static Font font2;
+    private static Font font3;
+    private static Font font4;
+    private static Font font5;
 
     static {
         File fontFile1 = new File("font\\future.ttf");
@@ -31,6 +32,7 @@ public class ParamsFrame extends JFrame {
             Font fontNew = Font.createFont(Font.TRUETYPE_FONT, fontFile1);
             font1 = fontNew.deriveFont(20f);
             font2 = fontNew.deriveFont(30f);
+            font5 = fontNew.deriveFont(12f);
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
@@ -62,6 +64,12 @@ public class ParamsFrame extends JFrame {
         UIManager.put("Button.background", colorBackground);
         UIManager.put("Button.foreground", Color.WHITE);
         UIManager.put("Button.font", font1);
+        UIManager.put("Button.focus", colorBackground);
+        UIManager.put("OptionPane.background", colorBackground);
+        UIManager.put("OptionPane.messageForeground", Color.WHITE);
+        UIManager.put("OptionPane.messageFont", font5); //OptionPane.informationIcon
+        UIManager.put("OptionPane.questionIcon", new ImageIcon("image\\lvFly.gif"));
+
 
         this.getContentPane().add(panelMain, "Center");
         this.setResizable(false);
@@ -268,17 +276,40 @@ public class ParamsFrame extends JFrame {
                         int lv = Integer.parseInt(startLiberalValues.getText().trim());
                         if (lv > 1000) {
                             Map<Player, Color> map = new HashMap<>();
+                            List<Color> colors = new ArrayList<>();
                             for (int i = 0; i < textFields.size(); i++) {
                                 Player player = new Player(textFields.get(i).getText(), lv);
                                 Color color = colorButtons.get(i).getBackground();
+                                colors.add(color);
                                 map.put(player, color);
                             }
-                            try {
-                                new MainFrame(map, wight, height);
-                            } catch (IOException | ParseException e) {
-                                e.printStackTrace();
+                            boolean sameColors = false;
+                            outerLoop :
+                            for (int i = 0; i < colors.size(); i++) {
+                                for (int j = 0; j < colors.size(); j++) {
+                                    if (i != j && colors.get(i).equals(colors.get(j))) {
+                                        sameColors = true;
+                                        break outerLoop;
+                                    }
+                                }
                             }
-                            dispose();
+                            if (!sameColors) {
+                                try {
+                                    new MainFrame(map, wight, height);
+                                } catch (IOException | ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                dispose();
+                            } else {
+                                JLabel label = new JLabel("Присутствуют игроки одного цвета");
+                                label.setFont(font1);
+                                label.setForeground(Color.WHITE);
+                                JOptionPane op = new JOptionPane(label, JOptionPane.INFORMATION_MESSAGE);
+                                op.setOpaque(true);
+                                op.setBackground(c1);
+                                op.setIcon(null);
+                                op.createDialog(null, "Уп-сс").setVisible(true);
+                            }
                         } else {
                             JLabel label = new JLabel("Введите сумму больше 1000");
                             label.setFont(font1);

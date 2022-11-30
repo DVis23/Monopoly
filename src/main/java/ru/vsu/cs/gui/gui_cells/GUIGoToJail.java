@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.util.function.Function;
 
 public class GUIGoToJail extends GUICell {
+    private JPanel mainPanel;
+    private Image picture;
+    private JLabel picLabel;
 
     static {
         Function<GoToJail, GUIGoToJail> function = c -> {
@@ -35,14 +38,11 @@ public class GUIGoToJail extends GUICell {
     public GUIGoToJail(GoToJail cell) throws IOException {
 
 
-        JPanel mainPanel = new JPanel();
-        mainPanel.setPreferredSize(new Dimension(70, 70));
-        mainPanel.setBackground(Color.WHITE);
+        mainPanel = new JPanel();
+        mainPanel.setBackground(Color.BLACK);
 
-        BufferedImage myPicture = ImageIO.read(new File("image/go_to_jail_icon.png"));
-        JLabel picLabel = new JLabel(new ImageIcon(myPicture));
-        mainPanel.add(picLabel, BorderLayout.CENTER);
-
+        picture = ImageIO.read(new File("image/go_to_jail_icon.png"));
+        picLabel = new JLabel(new ImageIcon(picture));
 
         this.add(mainPanel, BorderLayout.CENTER);
         this.setVisible(true);
@@ -50,6 +50,17 @@ public class GUIGoToJail extends GUICell {
 
     @Override
     public void show(JPanel board, Player playerNow, PlayingField playingField){
+    }
 
+    @Override
+    public void setScaledInstance(int x, int y){
+        mainPanel.setPreferredSize(new Dimension(x, y));
+        //mainPanel.setBackground(Color.BLACK);
+        picture = picture.getScaledInstance(x - 10, y - 10, Image.SCALE_SMOOTH);
+        picLabel = new JLabel(new ImageIcon(picture));
+        mainPanel.add(picLabel);
+    }
+    @Override
+    public void update(){
     }
 }

@@ -26,7 +26,7 @@ public class GUICellFactory {
         );
     }
 
-    public static GUICell [] guiCells(PlayingField playingField) throws IOException {
+    public static GUICell [] guiCells(PlayingField playingField, int sizeX, int sizeY) throws IOException {
         Cell [] cells = playingField.getCells();
         GUICell [] guiCells = new GUICell[cells.length];
 
@@ -42,6 +42,7 @@ public class GUICellFactory {
 
         for (int i = 0; i < cells.length; i++) {
             GUICell guiCell = GUICellFactory.createGuiCell(cells[i]);
+            guiCell.setScaledInstance(sizeX, sizeY);
             guiCells[i] = guiCell;
         }
 

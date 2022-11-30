@@ -16,8 +16,11 @@ import java.io.IOException;
 import java.util.function.Function;
 
 public class GUIChance extends GUICell {
-
+    private final JPanel mainPanel;
     private final Chance chance;
+    private Image picture;
+    private JLabel picLabel;
+    private static Font font;
 
     static {
         Function<Chance, GUIChance> function = c -> {
@@ -29,17 +32,22 @@ public class GUIChance extends GUICell {
             }
         };
         GUICellFactory.registerType(Chance.class, function);
+
+        File fontFile1 = new File("font\\future.ttf");
+        try {
+            Font fontNew = Font.createFont(Font.TRUETYPE_FONT, fontFile1);
+            font = fontNew.deriveFont(12f);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public GUIChance(Chance chance) throws IOException {
         this.chance = chance;
-        JPanel mainPanel = new JPanel();
-        mainPanel.setPreferredSize(new Dimension(70, 70));
-        mainPanel.setBackground(Color.WHITE);
-
-        BufferedImage myPicture = ImageIO.read(new File("image/chance_icon.png"));
-        JLabel picLabel = new JLabel(new ImageIcon(myPicture));
-        mainPanel.add(picLabel);
+        mainPanel = new JPanel();
+        mainPanel.setBackground(Color.BLACK);
+        mainPanel.setLayout(new BorderLayout());
+        picture = ImageIO.read(new File("image\\77.png"));
 
         this.add(mainPanel, BorderLayout.CENTER);
         this.setVisible(true);
@@ -47,15 +55,34 @@ public class GUIChance extends GUICell {
 
     @Override
     public void show(JPanel board, Player playerNow, PlayingField playingField){
+        JLabel label;
         if (chance.getI() == 1) {
-            JOptionPane.showMessageDialog(board, " Поле шанс: вы сделали взнос в размере 2000 ");
+            label= new JLabel(" Поле шанс: вы сделали взнос в размере 2000 ");
         } else if (chance.getI() == 2) {
-            JOptionPane.showMessageDialog(board, " Поле шанс: вы выиграли в лотерее 5000 ");
+            label= new JLabel(" Поле шанс: вы выиграли в лотерее 5000 ");
         } else if (chance.getI() == 3) {
-            JOptionPane.showMessageDialog(board, " Поле шанс: каждый игрок скидывается вам на банкет по 500 ");
-        } else if (chance.getI() == 4) {
-            JOptionPane.showMessageDialog(board, " Поле шанс: вы выплатили каждому игроку по 500 в знак дружбы ");
+            label= new JLabel(" Поле шанс: каждый игрок скидывается вам на банкет по 500 ");
+        } else  {
+            label= new JLabel(" Поле шанс: вы выплатили каждому игроку по 500 в знак дружбы ");
         }
+        label.setForeground(Color.WHITE);
+        label.setFont(font);
+        JOptionPane op = new JOptionPane(label, JOptionPane.INFORMATION_MESSAGE);
+        op.setOpaque(true);
+        op.setIcon(new ImageIcon("image\\lv.gif"));
+        op.createDialog(null).setVisible(true);
+    }
+
+    @Override
+    public void setScaledInstance(int x, int y){
+        mainPanel.setPreferredSize(new Dimension(x, y));
+        picture = picture.getScaledInstance(x - 20, y - 20,Image.SCALE_SMOOTH);
+        picLabel = new JLabel(new ImageIcon(picture));
+        mainPanel.add(picLabel, BorderLayout.CENTER);
+    }
+
+    @Override
+    public void update(){
     }
 
 }

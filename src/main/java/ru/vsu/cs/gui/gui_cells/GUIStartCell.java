@@ -3,6 +3,7 @@ package ru.vsu.cs.gui.gui_cells;
 import ru.vsu.cs.Cell;
 import ru.vsu.cs.Player;
 import ru.vsu.cs.PlayingField;
+import ru.vsu.cs.cells.Chance;
 import ru.vsu.cs.cells.GoToJail;
 import ru.vsu.cs.cells.RailRoad;
 import ru.vsu.cs.cells.StartCell;
@@ -19,6 +20,9 @@ import java.io.IOException;
 import java.util.function.Function;
 
 public class GUIStartCell extends GUICell {
+    private final JPanel mainPanel;
+    private final JLabel label1;
+    private static Font font;
 
     static {
         Function<StartCell, GUIStartCell> function = c -> {
@@ -30,17 +34,23 @@ public class GUIStartCell extends GUICell {
             }
         };
         GUICellFactory.registerType(StartCell.class, function);
+
+        File fontFile1 = new File("font\\future.ttf");
+        try {
+            Font fontNew = Font.createFont(Font.TRUETYPE_FONT, fontFile1);
+            font = fontNew.deriveFont(20f);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public GUIStartCell(StartCell cell) throws IOException {
+        mainPanel = new JPanel();
+        mainPanel.setBackground(Color.BLACK);
 
-        JPanel mainPanel = new JPanel();
-        mainPanel.setPreferredSize(new Dimension(70, 70));
-        mainPanel.setBackground(Color.WHITE);
-
-        BufferedImage myPicture = ImageIO.read(new File("image/arrow_icon.png"));
-        JLabel picLabel = new JLabel(new ImageIcon(myPicture));
-        mainPanel.add(picLabel);
+        label1 = new JLabel("GO");
+        label1.setFont(font);
+        label1.setForeground(Color.WHITE);
 
         this.add(mainPanel, BorderLayout.CENTER);
         this.setVisible(true);
@@ -49,5 +59,19 @@ public class GUIStartCell extends GUICell {
     @Override
     public void show(JPanel board, Player playerNow, PlayingField playingField){
 
+    }
+    @Override
+    public void setScaledInstance(int x, int y){
+        mainPanel.setPreferredSize(new Dimension(x, y));
+        if (x > 180) {
+            font = font.deriveFont(60f);
+        } else if (x > 120) {
+            font = font.deriveFont(35f);
+        }
+        label1.setFont(font);
+        mainPanel.add(label1);
+    }
+    @Override
+    public void update(){
     }
 }

@@ -12,28 +12,42 @@ import ru.vsu.cs.gui.GUICellFactory;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.util.function.Function;
 
 public class GUIStreet extends GUICell {
-
+    private static Font font1;
+    private static Font font2;
     private final Street street;
+    private final JPanel mainPanel;
+    private final JTextArea streetInform;
 
     static {
         Function<Street, GUIStreet> function = c -> new GUIStreet(c);
         GUICellFactory.registerType(Street.class, function);
+        File fontFile1 = new File("font\\future.ttf");
+        try {
+            Font fontNew = Font.createFont(Font.TRUETYPE_FONT, fontFile1);
+            font1 = fontNew.deriveFont(6f);
+            font2 = fontNew.deriveFont(12f);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public GUIStreet(Street  street)  {
         this.street = street;
-        JPanel mainPanel = new JPanel();
+        mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
         mainPanel.setPreferredSize(new Dimension(70, 70));
-        JTextArea streetInform = new JTextArea();
+        streetInform = new JTextArea();
+        streetInform.setBackground(Color.BLACK);
+        streetInform.setBorder(BorderFactory.createEmptyBorder(5,3,0,0));
         streetInform.setPreferredSize(new Dimension(68, 63));
         streetInform.setEditable(false);
-        Font font = new Font("BOLD", Font.BOLD, 9);
-        streetInform.setFont(font);
-        streetInform.setForeground(Color.BLACK);
+        streetInform.setFont(font1);
+        streetInform.setForeground(Color.WHITE);
         streetInform.setLineWrap(true);
         streetInform.setWrapStyleWord(true);
 
@@ -41,47 +55,51 @@ public class GUIStreet extends GUICell {
 
         Street.Color color = street.getColor();
         if (color == Street.Color.BROWN) {
-            mainPanel.setBackground(new Color(59, 34, 6));
+            mainPanel.setBackground(new Color(142, 8, 157));
         }
         else if (color == Street.Color.WHITE) {
-            mainPanel.setBackground(Color.LIGHT_GRAY);
+            mainPanel.setBackground(new Color(250, 231, 229));
         }
         else if (color == Street.Color.RED) {
-            mainPanel.setBackground(Color.RED);
+            mainPanel.setBackground(new Color(234, 0, 59));
         }
         else if (color == Street.Color.YELLOW) {
-            mainPanel.setBackground(Color.YELLOW);
+            mainPanel.setBackground(new Color(241, 250, 120));
         }
         else if (color == Street.Color.ORANGE) {
-            mainPanel.setBackground(Color.ORANGE);
+            mainPanel.setBackground(new Color(255, 119, 54));
         }
         else if (color == Street.Color.ROSE) {
-            mainPanel.setBackground(Color.PINK);
+            mainPanel.setBackground(new Color(255, 33, 93));
         }
         else if (color == Street.Color.BLUE) {
-            mainPanel.setBackground(Color.BLUE);
+            mainPanel.setBackground(new Color(104, 0, 205));
         }
         else if (color == Street.Color.GREEN) {
-            mainPanel.setBackground(Color.GREEN);
+            mainPanel.setBackground(new Color(44, 255, 125));
         } else {
             mainPanel.setBackground(Color.BLACK);
         }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append(street.getName()).append("\n");
-        if (street.getOwner() == null) {
-            sb.append(street.getCost());
-        } else {
-            sb.append(street.getIncome()).append("\n");
-            sb.append(street.getOwner().getName());
-        }
-        if (street.getNumberHotel() != 0) sb.append("\n").append("Отели: ").append(street.getNumberHotel());
-        String str = sb.toString();
-        streetInform.setText(str);
+        write();
 
         mainPanel.add(streetInform, BorderLayout.SOUTH);
         this.add(mainPanel, BorderLayout.CENTER);
         this.setVisible(true);
+    }
+
+    private void write(){
+        StringBuilder sb = new StringBuilder();
+        sb.append(street.getName()).append("\n");
+        if (street.getOwner() == null) {
+            sb.append(" ").append(street.getCost());
+        } else {
+            sb.append(" ").append(street.getIncome()).append("\n");
+            sb.append(" ").append(street.getOwner().getName());
+        }
+        if (street.getNumberHotel() != 0) sb.append("\n").append(" Отели: ").append(street.getNumberHotel());
+        String str = sb.toString();
+        streetInform.setText(str);
     }
 
     @Override
@@ -89,9 +107,33 @@ public class GUIStreet extends GUICell {
         int o = 3;
         if (street.getOwner() == null) {
             if (playerNow.getLiberalValues() > street.getCost()) {
-                o = JOptionPane.showConfirmDialog(board, "Купить улицу?");
+                String str = " Купить '" + street.getName() + "'?";
+                o = JOptionPane.showConfirmDialog(board,  str);
             }
         }
-        if (o == 0) street.action2(playerNow, playingField);
+        if (o == 0) {
+            street.action2(playerNow, playingField);
+            update();
+        }
+    }
+
+    @Override
+    public void setScaledInstance(int x, int y){
+        mainPanel.setPreferredSize(new Dimension(x, y));
+        streetInform.setPreferredSize(new Dimension(x, y - 20));
+        if (x > 180) {
+            font1 = font1.deriveFont(12f);
+            streetInform.setPreferredSize(new Dimension(x, y - 30));
+        } else if (x > 120) {
+            font1 = font1.deriveFont(10f);
+            streetInform.setPreferredSize(new Dimension(x, y - 25));
+        } else {
+            streetInform.setPreferredSize(new Dimension(x, y - 15));
+        }
+        streetInform.setFont(font1);
+    }
+    @Override
+    public void update(){
+        write();
     }
 }

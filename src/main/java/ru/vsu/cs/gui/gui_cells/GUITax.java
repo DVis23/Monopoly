@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.util.function.Function;
 
 public class GUITax extends GUICell {
+    private JPanel mainPanel;
+    private Image picture;
+    private JLabel picLabel;
 
     static {
         Function<Tax, GUITax> function = c -> {
@@ -34,15 +37,11 @@ public class GUITax extends GUICell {
 
 
     public GUITax(Tax cell) throws IOException {
+        mainPanel = new JPanel();
+        mainPanel.setBackground(Color.BLACK);
 
-        JPanel mainPanel = new JPanel();
-        mainPanel.setPreferredSize(new Dimension(70, 70));
-        mainPanel.setBackground(Color.WHITE);
-
-        BufferedImage myPicture = ImageIO.read(new File("image/tax_icon.png"));
-        JLabel picLabel = new JLabel(new ImageIcon(myPicture));
-        mainPanel.add(picLabel);
-
+        picture = ImageIO.read(new File("image\\74-10.png"));
+        JLabel picLabel = new JLabel(new ImageIcon(picture));
 
         this.add(mainPanel, BorderLayout.CENTER);
         this.setVisible(true);
@@ -51,5 +50,16 @@ public class GUITax extends GUICell {
     @Override
     public void show(JPanel board, Player playerNow, PlayingField playingField){
 
+    }
+
+    @Override
+    public void setScaledInstance(int x, int y){
+        mainPanel.setPreferredSize(new Dimension(x, y));
+        picture = picture.getScaledInstance(x - 20, y - 20, Image.SCALE_SMOOTH);
+        picLabel = new JLabel(new ImageIcon(picture));
+        mainPanel.add(picLabel);
+    }
+    @Override
+    public void update(){
     }
 }

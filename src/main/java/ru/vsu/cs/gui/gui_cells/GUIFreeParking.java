@@ -19,6 +19,10 @@ import java.io.IOException;
 import java.util.function.Function;
 
 public class GUIFreeParking extends GUICell {
+    private final JPanel mainPanel;
+    private Image picture;
+    private JLabel picLabel;
+    private static Font font;
 
     static {
         Function<FreeParking, GUIFreeParking> function = c -> {
@@ -30,25 +34,47 @@ public class GUIFreeParking extends GUICell {
             }
         };
         GUICellFactory.registerType(FreeParking.class, function);
+
+        File fontFile1 = new File("font\\future.ttf");
+        try {
+            Font fontNew = Font.createFont(Font.TRUETYPE_FONT, fontFile1);
+            font = fontNew.deriveFont(12f);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public GUIFreeParking(FreeParking cell) throws IOException {
-
-
-        JPanel mainPanel = new JPanel();
+        mainPanel = new JPanel();
         mainPanel.setPreferredSize(new Dimension(70, 70));
-        mainPanel.setBackground(Color.WHITE);
-
-        BufferedImage myPicture = ImageIO.read(new File("image/free_parking_icon.png"));
-        JLabel picLabel = new JLabel(new ImageIcon(myPicture));
-        mainPanel.add(picLabel);
-
-
+        mainPanel.setBackground(Color.BLACK);
+        mainPanel.setLayout(new BorderLayout());
+        picture = ImageIO.read(new File("image/75.gif"));
         this.add(mainPanel, BorderLayout.CENTER);
         this.setVisible(true);
     }
 
     @Override
     public void show(JPanel board, Player playerNow, PlayingField playingField){
+        JLabel label;
+        label= new JLabel(" Вы попали на бесплатную парковку, отдыхайте... ");
+        label.setForeground(Color.WHITE);
+        label.setFont(font);
+        JOptionPane op = new JOptionPane(label, JOptionPane.INFORMATION_MESSAGE);
+        op.setOpaque(true);
+        op.setIcon(new ImageIcon("image\\lv.gif"));
+        op.createDialog(null).setVisible(true);
     }
+    @Override
+    public void setScaledInstance(int x, int y){
+        mainPanel.setPreferredSize(new Dimension(x, y));
+        picture = picture.getScaledInstance(x - 20, y - 20, Image.SCALE_SMOOTH);
+        picLabel = new JLabel(new ImageIcon(picture));
+        mainPanel.add(picLabel, BorderLayout.CENTER);
+    }
+    @Override
+    public void update(){
+    }
+
+
 }

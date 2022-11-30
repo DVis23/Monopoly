@@ -54,8 +54,9 @@ public class MainFrame extends JFrame {
     private JPanel panelSouthMini;
 
     private ManagerFrame managerFrame = new ManagerFrame();
+    private GUICell [] guiCells;
 
-    private static Font font = new Font("BOLD", Font.BOLD, 20);
+    private static Font font;
 
     static {
         File fontFile2 = new File("font\\Advanced.ttf");
@@ -128,6 +129,7 @@ public class MainFrame extends JFrame {
         int countVerCell = countCell/4 - 1;
         int countHorCell = countCell/4 + 1;
         int sizeCell =  sizeBoard/countHorCell;
+        guiCells = GUICellFactory.guiCells(playingField, sizeCell, sizeCell);
         int sizeMiniBoard = sizeBoard - 2*sizeCell;
         int sizeMiniCell = sizeMiniBoard/countHorCell;
 
@@ -193,6 +195,8 @@ public class MainFrame extends JFrame {
         panelNorthMini.setBorder(BorderFactory.createEmptyBorder(0, -4, 0, -4));
         panelCenter.add(panelNorthMini, BorderLayout.NORTH);
 
+
+
         drawPlayersBoard();
         drawBoardPanel();
         drawBoardMini();
@@ -204,33 +208,24 @@ public class MainFrame extends JFrame {
             public void actionPerformed(ActionEvent actionEvent) {
                 managerFrame.setVisible(false);
                 game.playerAction(playerNow);
-                int skipping = playerNow.getSkipping();
-                if (skipping == 3 || skipping == 2) {
-                    JOptionPane.showMessageDialog(board, " Вы пропускайте еще " + skipping + " хода ");
-                } else if (skipping == 1) JOptionPane.showMessageDialog(board, " Вы пропускайте еще " + skipping + " ход ");
                 try {
                     updateView();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
-                GUICell [] guiCells = new GUICell[0];
-                try {
-                    guiCells = GUICellFactory.guiCells(playingField);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
                 guiCells[playerNow.getStep()].show(board, playerNow, game.getPlayingField());
 
                 nextPlayer();
                 if (game.getGameState() == Game.GameState.GAME_OVER) {
                     JOptionPane.showMessageDialog(board, "Игра окончена, победил игрок: '" + players.get(0).getName() + "'");
-                    panelRight.remove(panelButton);
-                }
-                try {
-                    updateView();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    makeAMove.setVisible(false);
+                    manager.setVisible(false);
+                    try {
+                        updateView();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -291,7 +286,6 @@ public class MainFrame extends JFrame {
     }
     private void drawBoardPanel() throws IOException {
         Cell [] cells = playingField.getCells();
-        GUICell [] guiCells = GUICellFactory.guiCells(playingField);
         drawPanel(panelNorth, 0, cells.length/4, guiCells);
         drawPanel(panelEast, cells.length/4 + 1, cells.length/2 - 1, guiCells);
         drawPanel(panelSouth, cells.length/4*3,cells.length/2, guiCells);
@@ -331,11 +325,12 @@ public class MainFrame extends JFrame {
         }
     }
 
+
     private void drawCellMini(JPanel panel, int i, ArrayList<Player> players, GridLayout layout) {
         JPanel panelMini = new JPanel();
         panelMini.setLayout(layout);
-        panelMini.setBorder(new LineBorder(Color.BLACK, 1));
-        panelMini.setBackground(Color.WHITE);
+        panelMini.setBorder(new LineBorder(Color.WHITE, 1));
+        panelMini.setBackground(new Color(47, 23, 52));
         for (int j = 0; j < players.size(); j++) {
             if(players.get(j).getStep() == i) {
                 JPanel player = new JPanel();

@@ -19,8 +19,12 @@ import java.util.Objects;
 import java.util.function.Function;
 
 public class GUIUtilityCompany extends GUICell {
-
+    private final JPanel mainPanel;
+    private JLabel picLabel;
+    private Image picture;
+    private final JTextArea UCInform;
     private final UtilityCompany utilityCompany;
+    private static Font font;
 
     static {
         Function<UtilityCompany, GUIUtilityCompany> function = c -> {
@@ -32,52 +36,57 @@ public class GUIUtilityCompany extends GUICell {
             }
         };
         GUICellFactory.registerType(UtilityCompany.class, function);
+
+        File fontFile1 = new File("font\\future.ttf");
+        try {
+            Font fontNew = Font.createFont(Font.TRUETYPE_FONT, fontFile1);
+            font = fontNew.deriveFont(8f);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public GUIUtilityCompany(UtilityCompany utilityCompany) throws IOException {
         this.utilityCompany = utilityCompany;
-        JPanel mainPanel = new JPanel();
-        mainPanel.setPreferredSize(new Dimension(70, 70));
-        mainPanel.setBackground(Color.WHITE);
+        mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
 
         if (Objects.equals(utilityCompany.getName(), "Электростанция")) {
-            BufferedImage myPicture = ImageIO.read(new File("image/electric_icon.png"));
-            JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+            picture = ImageIO.read(new File("image\\79.png"));
+            picLabel = new JLabel(new ImageIcon(picture));
             picLabel.setLayout(new BorderLayout(0,0));
-            picLabel.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-            mainPanel.add(picLabel, BorderLayout.NORTH);
+            picLabel.setBorder(BorderFactory.createEmptyBorder(0,0,5,0));
         } else if (Objects.equals(utilityCompany.getName(), "Водопровод")) {
-            BufferedImage myPicture = ImageIO.read(new File("image/water_icon.png"));
-            JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+            picture = ImageIO.read(new File("image\\80.png"));
+            picLabel = new JLabel(new ImageIcon(picture));
             picLabel.setLayout(new BorderLayout(0,0));
-            picLabel.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-            mainPanel.add(picLabel, BorderLayout.NORTH);
+            picLabel.setBorder(BorderFactory.createEmptyBorder(0,0,5,0));
         }
 
-        JTextArea UCInform = new JTextArea();
-        UCInform.setPreferredSize(new Dimension(68, 53));
+        UCInform = new JTextArea();
         UCInform.setEditable(false);
-        Font font = new Font("BOLD", Font.BOLD, 10);
-        UCInform.setFont(font);
-        UCInform.setForeground(Color.BLACK);
+        UCInform.setForeground(Color.WHITE);
+        UCInform.setBackground(Color.BLACK);
+        UCInform.setBorder(BorderFactory.createEmptyBorder(5,3,0,0));
         UCInform.setLineWrap(true);
         UCInform.setWrapStyleWord(true);
 
+        write();
+
+        this.add(mainPanel, BorderLayout.CENTER);
+        this.setVisible(true);
+    }
+
+    private void write(){
         StringBuilder sb = new StringBuilder();
         if (utilityCompany.getOwner() == null) {
             sb.append(utilityCompany.getCost());
         } else {
-            sb.append(utilityCompany.getIncome()).append(" ");
+            sb.append(" ").append(utilityCompany.getIncome()).append(" ");
             sb.append(utilityCompany.getOwner().getName());
         }
         String str = sb.toString();
         UCInform.setText(str);
-
-        mainPanel.add(UCInform, BorderLayout.SOUTH);
-
-
-        this.add(mainPanel, BorderLayout.CENTER);
-        this.setVisible(true);
     }
 
     @Override
@@ -87,8 +96,31 @@ public class GUIUtilityCompany extends GUICell {
             if (playerNow.getLiberalValues() > utilityCompany.getCost()) {
                 o = JOptionPane.showConfirmDialog(board, "Купить коммунальную службу?");
             }
-            if (o == 0)
+            if (o == 0) {
                 utilityCompany.action2(playerNow, playingField);
+                write();
+            }
         }
+    }
+
+    @Override
+    public void setScaledInstance(int x, int y){
+        mainPanel.setPreferredSize(new Dimension(x, y));
+        UCInform.setPreferredSize(new Dimension(x - 10, y/7*3));
+        picture = picture.getScaledInstance(x - 10, y/7*4, Image.SCALE_SMOOTH);
+        picLabel = new JLabel(new ImageIcon(picture));
+        mainPanel.add(picLabel, BorderLayout.NORTH);
+        mainPanel.add(UCInform, BorderLayout.SOUTH);
+        if (x > 180) {
+            font = font.deriveFont(12f);
+        } else if (x > 120) {
+            font = font.deriveFont(10f);
+        }
+        UCInform.setFont(font);
+    }
+
+    @Override
+    public void update(){
+        write();
     }
 }

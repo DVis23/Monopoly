@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.util.function.Function;
 
 public class GUIJail extends GUICell {
+    private JPanel mainPanel;
+    private Image picture;
+    private JLabel picLabel;
 
     static {
         Function<Jail, GUIJail> function = c -> {
@@ -33,23 +36,30 @@ public class GUIJail extends GUICell {
     }
 
     public GUIJail(Jail cell) throws IOException {
-
-
-        JPanel mainPanel = new JPanel();
-        mainPanel.setPreferredSize(new Dimension(70, 70));
-        mainPanel.setBackground(Color.WHITE);
-
-        BufferedImage myPicture = ImageIO.read(new File("image/jake_icon.png"));
-        JLabel picLabel = new JLabel(new ImageIcon(myPicture));
-        mainPanel.add(picLabel);
-
-
+        mainPanel = new JPanel();
+        mainPanel.setBackground(Color.BLACK);
+        mainPanel.setLayout(new BorderLayout());
+        picture = ImageIO.read(new File("image/76.png"));
         this.add(mainPanel, BorderLayout.CENTER);
         this.setVisible(true);
     }
 
     @Override
     public void show(JPanel board, Player playerNow, PlayingField playingField){
+        int skipping = playerNow.getSkipping();
+        if (skipping == 3 || skipping == 2) {
+            JOptionPane.showMessageDialog(board, " Вы пропускайте еще " + skipping + " хода ");
+        } else if (skipping == 1) JOptionPane.showMessageDialog(board, " Вы пропускайте еще " + skipping + " ход ");
+    }
 
+    @Override
+    public void setScaledInstance(int x, int y){
+        mainPanel.setPreferredSize(new Dimension(x, y));
+        picture = picture.getScaledInstance(x - 20, y - 20, Image.SCALE_SMOOTH);
+        picLabel = new JLabel(new ImageIcon(picture));
+        mainPanel.add(picLabel, BorderLayout.CENTER);
+    }
+    @Override
+    public void update(){
     }
 }
