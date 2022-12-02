@@ -8,8 +8,9 @@ import java.io.File;
 import java.io.IOException;
 
 public class ContentPanel extends JPanel implements KeyListener {
-    private int width,height;
-    private JFrame frame;
+    private final int width;
+    private final int height;
+    private final JFrame frame;
 
     public ContentPanel(int width, int height, JFrame frame) {
         this.width = width;
@@ -71,19 +72,17 @@ public class ContentPanel extends JPanel implements KeyListener {
         switch(keyCode)
         {
             case KeyEvent.VK_UP:
-                focusIndex = (focusIndex + menus.length-1)% menus.length;
-                this.repaint ();
+                focusIndex = (focusIndex + menus.length - 1)%menus.length;
+                this.repaint();
                 break;
             case KeyEvent.VK_DOWN:
-                focusIndex = (focusIndex + 1) % menus.length;
+                focusIndex = (focusIndex + 1)%menus.length;
                 this.repaint();
                 break;
             case KeyEvent.VK_ENTER:
                 if (focusIndex == 0) {
                     frame.dispose();
                     new ParamsFrame(width, height).setVisible(true);
-
-
                 } else if (focusIndex == 2) {
                     System.exit(0);
                 }

@@ -8,10 +8,13 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
+import javax.swing.Timer;
 
 public class ParamsFrame extends JFrame {
     private final List<JTextField> textFields = new ArrayList<>();
@@ -23,6 +26,8 @@ public class ParamsFrame extends JFrame {
     private static Font font3;
     private static Font font4;
     private static Font font5;
+    private JButton begin;
+    private JButton back;
 
     static {
         File fontFile1 = new File("font\\future.ttf");
@@ -50,6 +55,19 @@ public class ParamsFrame extends JFrame {
         this.setTitle("MONOPOLY");
         this.pack();
         this.setSize(width, height);
+        this.addKeyListener(new KeyListener() {
+            public void keyPressed(KeyEvent e) {
+                int keyCode = e.getKeyCode();
+                switch (keyCode) {
+                    case KeyEvent.VK_ESCAPE -> back.doClick();
+                    case KeyEvent.VK_ENTER -> begin.doClick();
+                }
+            }
+            public void keyReleased(KeyEvent e) {
+            }
+            public void keyTyped(KeyEvent e) {
+            }
+        });
 
         JPanel panelMain = new JPanel();
         JPanel panelRight = new PanelRight(width, height);
@@ -72,6 +90,7 @@ public class ParamsFrame extends JFrame {
         this.getContentPane().add(panelMain, "Center");
         this.setResizable(false);
         this.setLocationRelativeTo(null);
+        this.setFocusable(true);
         this.setVisible(true);
     }
 
@@ -93,6 +112,7 @@ public class ParamsFrame extends JFrame {
             this.add(buttonAddPlayer);
             buttonAddPlayer.setLocation(8, 160);
             buttonAddPlayer.setSize(new Dimension(60, 40));
+            buttonAddPlayer.setFocusable(false);
 
             JButton buttonRemovePlayer = new JButton("-");
             buttonRemovePlayer.setFont(font2);
@@ -103,6 +123,7 @@ public class ParamsFrame extends JFrame {
             this.add(buttonRemovePlayer);
             buttonRemovePlayer.setLocation(8, 200);
             buttonRemovePlayer.setSize(new Dimension(60, 40));
+            buttonRemovePlayer.setFocusable(false);
 
             JTextField liberalValues = new SuperTextField(" 5000");
             startLiberalValues = liberalValues;
@@ -198,6 +219,19 @@ public class ParamsFrame extends JFrame {
                 this.setBackground(colorBackground);
                 this.setForeground(Color.WHITE);
                 this.setFont(font2);
+                this.addKeyListener(new KeyListener() {
+                    public void keyPressed(KeyEvent e) {
+                        int keyCode = e.getKeyCode();
+                        switch (keyCode) {
+                            case KeyEvent.VK_ESCAPE -> back.doClick();
+                            case KeyEvent.VK_ENTER -> begin.doClick();
+                        }
+                    }
+                    public void keyReleased(KeyEvent e) {
+                    }
+                    public void keyTyped(KeyEvent e) {
+                    }
+                });
             }
         }
 
@@ -208,6 +242,7 @@ public class ParamsFrame extends JFrame {
                 this.setBackground(color);
                 this.setBorder(new LineBorder(Color.WHITE, 2));
                 this.setFocusPainted(false);
+                this.setFocusable(false);
                 this.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent actionEvent) {
@@ -232,8 +267,8 @@ public class ParamsFrame extends JFrame {
             Color c1 = new Color(23, 4, 41);
             this.setBackground(c1);
 
-            JButton back = new JButton("НАЗАД");
-            JButton begin = new JButton("НАЧАТЬ");
+            back = new JButton("НАЗАД");
+            begin = new JButton("НАЧАТЬ");
             back.setFont(font4);
             back.setForeground(Color.CYAN);
             back.setBorderPainted(false);
@@ -255,80 +290,111 @@ public class ParamsFrame extends JFrame {
             back.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
-                    dispose();
-                    new StartFrame();
+                    back.setForeground(Color.RED);
+                    Timer timer = new Timer(200, new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            back.setForeground(Color.CYAN);
+                        }
+                    });
+                    timer.setRepeats(false);
+                    timer.start();
+                    Timer timer2 = new Timer(300, new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            dispose();
+                            new StartFrame();
+                        }
+                    });
+                    timer2.setRepeats(false);
+                    timer2.start();
                 }
             });
             begin.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
-                    Font font1 = new Font("BOLD", Font.BOLD, 20);
-                    File font_file = new File("font\\future.ttf");
-                    try {
-                        Font font1New = Font.createFont(Font.TRUETYPE_FONT, font_file);
-                        font1 = font1New.deriveFont(20f);
-                    } catch (FontFormatException | IOException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        int lv = Integer.parseInt(startLiberalValues.getText().trim());
-                        if (lv > 1000) {
-                            Map<Player, Color> map = new LinkedHashMap<>();
-                            List<Color> colors = new ArrayList<>();
-                            for (int i = 0; i < textFields.size(); i++) {
-                                Player player = new Player(textFields.get(i).getText(), lv);
-                                Color color = colorButtons.get(i).getBackground();
-                                colors.add(color);
-                                map.put(player, color);
+                    begin.setForeground(Color.RED);
+                    Timer timer = new Timer(200, new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            begin.setForeground(Color.CYAN);
+                        }
+                    });
+                    timer.start();
+                    Timer timer2 = new Timer(300, new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            Font font1 = new Font("BOLD", Font.BOLD, 20);
+                            File font_file = new File("font\\future.ttf");
+                            try {
+                                Font font1New = Font.createFont(Font.TRUETYPE_FONT, font_file);
+                                font1 = font1New.deriveFont(20f);
+                            } catch (FontFormatException | IOException e1) {
+                                e1.printStackTrace();
                             }
-                            boolean sameColors = false;
-                            outerLoop :
-                            for (int i = 0; i < colors.size(); i++) {
-                                for (int j = 0; j < colors.size(); j++) {
-                                    if (i != j && colors.get(i).equals(colors.get(j))) {
-                                        sameColors = true;
-                                        break outerLoop;
+                            try {
+                                int lv = Integer.parseInt(startLiberalValues.getText().trim());
+                                if (lv > 1000) {
+                                    Map<Player, Color> map = new LinkedHashMap<>();
+                                    List<Color> colors = new ArrayList<>();
+                                    for (int i = 0; i < textFields.size(); i++) {
+                                        Player player = new Player(textFields.get(i).getText(), lv);
+                                        Color color = colorButtons.get(i).getBackground();
+                                        colors.add(color);
+                                        map.put(player, color);
                                     }
+                                    boolean sameColors = false;
+                                    outerLoop :
+                                    for (int i = 0; i < colors.size(); i++) {
+                                        for (int j = 0; j < colors.size(); j++) {
+                                            if (i != j && colors.get(i).equals(colors.get(j))) {
+                                                sameColors = true;
+                                                break outerLoop;
+                                            }
+                                        }
+                                    }
+                                    if (!sameColors) {
+                                        try {
+                                            new MainFrame(map, wight, height);
+                                        } catch (IOException | ParseException e1) {
+                                            e1.printStackTrace();
+                                        }
+                                        dispose();
+                                    } else {
+                                        JLabel label = new JLabel("Присутствуют игроки одного цвета");
+                                        label.setFont(font1);
+                                        label.setForeground(Color.WHITE);
+                                        JOptionPane op = new JOptionPane(label, JOptionPane.INFORMATION_MESSAGE);
+                                        op.setOpaque(true);
+                                        op.setBackground(c1);
+                                        op.setIcon(null);
+                                        op.createDialog(null, "Уп-сс").setVisible(true);
+                                    }
+                                } else {
+                                    JLabel label = new JLabel("Введите сумму больше 1000");
+                                    label.setFont(font1);
+                                    label.setForeground(Color.WHITE);
+                                    JOptionPane op = new JOptionPane(label, JOptionPane.INFORMATION_MESSAGE);
+                                    op.setOpaque(true);
+                                    op.setBackground(c1);
+                                    op.setIcon(new ImageIcon("image\\lv.gif"));
+                                    op.createDialog(null, "Уп-сс").setVisible(true);
                                 }
-                            }
-                            if (!sameColors) {
-                                try {
-                                    new MainFrame(map, wight, height);
-                                } catch (IOException | ParseException e) {
-                                    e.printStackTrace();
-                                }
-                                dispose();
-                            } else {
-                                JLabel label = new JLabel("Присутствуют игроки одного цвета");
+
+                            } catch(NumberFormatException e1) {
+                                JLabel label = new JLabel("Введите число, а не...");
                                 label.setFont(font1);
                                 label.setForeground(Color.WHITE);
                                 JOptionPane op = new JOptionPane(label, JOptionPane.INFORMATION_MESSAGE);
                                 op.setOpaque(true);
                                 op.setBackground(c1);
-                                op.setIcon(null);
+                                op.setIcon(new ImageIcon("image\\lv.gif"));
                                 op.createDialog(null, "Уп-сс").setVisible(true);
                             }
-                        } else {
-                            JLabel label = new JLabel("Введите сумму больше 1000");
-                            label.setFont(font1);
-                            label.setForeground(Color.WHITE);
-                            JOptionPane op = new JOptionPane(label, JOptionPane.INFORMATION_MESSAGE);
-                            op.setOpaque(true);
-                            op.setBackground(c1);
-                            op.setIcon(new ImageIcon("image\\lv.gif"));
-                            op.createDialog(null, "Уп-сс").setVisible(true);
                         }
-
-                    } catch(NumberFormatException e) {
-                        JLabel label = new JLabel("Введите число, а не...");
-                        label.setFont(font1);
-                        label.setForeground(Color.WHITE);
-                        JOptionPane op = new JOptionPane(label, JOptionPane.INFORMATION_MESSAGE);
-                        op.setOpaque(true);
-                        op.setBackground(c1);
-                        op.setIcon(new ImageIcon("image\\lv.gif"));
-                        op.createDialog(null, "Уп-сс").setVisible(true);
-                    }
+                    });
+                    timer2.setRepeats(false);
+                    timer2.start();
                 }
             });
         }

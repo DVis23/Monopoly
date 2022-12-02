@@ -22,6 +22,7 @@ public class GUITax extends GUICell {
     private JPanel mainPanel;
     private Image picture;
     private JLabel picLabel;
+    private Tax tax;
 
     static {
         Function<Tax, GUITax> function = c -> {
@@ -36,7 +37,8 @@ public class GUITax extends GUICell {
     }
 
 
-    public GUITax(Tax cell) throws IOException {
+    public GUITax(Tax tax) throws IOException {
+        this.tax = tax;
         mainPanel = new JPanel();
         mainPanel.setBackground(Color.BLACK);
         picture = ImageIO.read(new File("image\\74-10.png"));
@@ -47,7 +49,7 @@ public class GUITax extends GUICell {
 
     @Override
     public void show(JPanel board, Player playerNow, PlayingField playingField){
-
+        JOptionPane.showMessageDialog(board, " Вы заплатили налог в размере " + tax.getCost());
     }
 
     @Override

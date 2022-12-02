@@ -14,15 +14,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.List;
 
 public class MainFrame extends JFrame {
 
-    private Game game;
-    private ArrayList<Player> players;
-    private ArrayList<InformPlayer> playersInform = new ArrayList<>();
-    private Map<Player, Color> map;
+    private final Game game;
+    private final List<Player> players;
+    private final Map<Player, Color> map;
     private final PlayingField playingField;
     private Player playerNow;
+
     private JPanel panelMain;
     private JPanel board;
     private JPanel panelPlayer;
@@ -66,8 +67,8 @@ public class MainFrame extends JFrame {
         this.setSize(wight, height);
         this.setResizable(false);
         this.map = map;
-        players = new ArrayList<>(map.keySet());
 
+        players = new ArrayList<>(map.keySet());
 
         panelMain = new JPanel();
         this.setContentPane(panelMain);
@@ -93,7 +94,6 @@ public class MainFrame extends JFrame {
         panelPlayer.setLayout(layout);
         panelPlayer.setPreferredSize(new Dimension(250, 400));
         panelPlayer.setBackground(new Color(23, 4, 41));
-
 
         panelButton.add(makeAMove);
         panelButton.add(manager);
@@ -197,27 +197,43 @@ public class MainFrame extends JFrame {
         makeAMove.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                managerFrame.setVisible(false);
-                game.playerAction(playerNow);
-                try {
-                    updateView();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                guiCells[playerNow.getStep()].show(board, playerNow, game.getPlayingField());
-
-                nextPlayer();
-                if (game.getGameState() == Game.GameState.GAME_OVER) {
-                    JOptionPane.showMessageDialog(board, "Игра окончена, победил игрок: '" + players.get(0).getName() + "'");
-                    makeAMove.setVisible(false);
-                    manager.setVisible(false);
-                    try {
-                        updateView();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                makeAMove.setForeground(Color.RED);
+                Timer timer = new Timer(200, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        makeAMove.setForeground(Color.CYAN);
                     }
-                }
+                });
+                timer.setRepeats(false);
+                timer.start();
+                Timer timer2 = new Timer(300, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        managerFrame.setVisible(false);
+                        game.playerAction(playerNow);
+                        try {
+                            updateView();
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+
+                        guiCells[playerNow.getStep()].show(board, playerNow, game.getPlayingField());
+
+                        nextPlayer();
+                        if (game.getGameState() == Game.GameState.GAME_OVER) {
+                            JOptionPane.showMessageDialog(board, "Игра окончена, победил игрок: '" + players.get(0).getName() + "'");
+                            makeAMove.setVisible(false);
+                            manager.setVisible(false);
+                            try {
+                                updateView();
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                    }
+                });
+                timer2.setRepeats(false);
+                timer2.start();
             }
 
 
@@ -226,16 +242,48 @@ public class MainFrame extends JFrame {
         manager.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                managerFrame = new ManagerFrame(playerNow, playingField);
-                managerFrame.setVisible(true);
+                manager.setForeground(Color.RED);
+                Timer timer = new Timer(200, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        manager.setForeground(Color.CYAN);
+                    }
+                });
+                timer.setRepeats(false);
+                timer.start();
+                Timer timer2 = new Timer(300, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        managerFrame = new ManagerFrame(playerNow, playingField);
+                        managerFrame.setVisible(true);
+                    }
+                });
+                timer2.setRepeats(false);
+                timer2.start();
             }
         });
 
         back.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
-                new StartFrame();
+                back.setForeground(Color.RED);
+                Timer timer = new Timer(200, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        back.setForeground(Color.CYAN);
+                    }
+                });
+                timer.setRepeats(false);
+                timer.start();
+                Timer timer2 = new Timer(300, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        dispose();
+                        new StartFrame();
+                    }
+                });
+                timer2.setRepeats(false);
+                timer2.start();
             }
         });
 
@@ -303,7 +351,7 @@ public class MainFrame extends JFrame {
         drawPanelMini(panelWestMini, cells.length - 1, cells.length/4*3 + 1, players);
     }
 
-    private void drawPanelMini(JPanel panel, int a, int b, ArrayList<Player> players) {
+    private void drawPanelMini(JPanel panel, int a, int b, List<Player> players) {
         GridLayout layout = new GridLayout(players.size(), 1, 0, 0);
         if (a < b) {
             for (int i = a; i <= b; i++) {
@@ -317,7 +365,7 @@ public class MainFrame extends JFrame {
     }
 
 
-    private void drawCellMini(JPanel panel, int i, ArrayList<Player> players, GridLayout layout) {
+    private void drawCellMini(JPanel panel, int i, List<Player> players, GridLayout layout) {
         JPanel panelMini = new JPanel();
         panelMini.setLayout(layout);
         panelMini.setBorder(new LineBorder(Color.WHITE, 1));

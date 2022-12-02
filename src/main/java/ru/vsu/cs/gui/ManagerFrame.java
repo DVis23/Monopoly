@@ -12,7 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ManagerFrame extends JDialog {
+public class ManagerFrame extends JDialog  {
     JPanel panel;
 
     public ManagerFrame(Player player, PlayingField playingField) {
@@ -108,7 +108,7 @@ public class ManagerFrame extends JDialog {
                     button.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent actionEvent) {
-                            ((RailRoad) cell).deleteOwner();
+                            ((RailRoad) cell).deleteOwner(player, playingField);
                             player.setLiberalValues(player.getLiberalValues() + ((RailRoad) cell).getCost() / 2);
                             panel.remove(button);
                             panel.setVisible(true);
@@ -137,7 +137,7 @@ public class ManagerFrame extends JDialog {
                     button.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent actionEvent) {
-                            ((UtilityCompany) cell).deleteOwner();
+                            ((UtilityCompany) cell).deleteOwner(player, playingField);
                             player.setLiberalValues(player.getLiberalValues() + ((UtilityCompany) cell).getCost() / 2);
                             panel.remove(button);
                             panel.setVisible(true);

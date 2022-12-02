@@ -22,7 +22,10 @@ import java.util.function.Function;
 public class GUIStartCell extends GUICell {
     private final JPanel mainPanel;
     private final JLabel label1;
-    private static Font font;
+    private final JLabel label2;
+    private static Font font1;
+    private static Font font2;
+    private StartCell startCell;
 
     static {
         Function<StartCell, GUIStartCell> function = c -> {
@@ -38,19 +41,28 @@ public class GUIStartCell extends GUICell {
         File fontFile1 = new File("font\\future.ttf");
         try {
             Font fontNew = Font.createFont(Font.TRUETYPE_FONT, fontFile1);
-            font = fontNew.deriveFont(20f);
+            font1 = fontNew.deriveFont(20f);
+            font2 = fontNew.deriveFont(10f);
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
     }
 
-    public GUIStartCell(StartCell cell) throws IOException {
+    public GUIStartCell(StartCell startCell) throws IOException {
+        this.startCell = startCell;
+        this.setLayout(new BorderLayout());
         mainPanel = new JPanel();
         mainPanel.setBackground(Color.BLACK);
+        mainPanel.setLayout(new BorderLayout());
 
         label1 = new JLabel("GO");
-        label1.setFont(font);
+        label1.setFont(font1);
         label1.setForeground(Color.WHITE);
+        label1.setBorder(BorderFactory.createEmptyBorder(15,4,0,0));
+        label2 = new JLabel("+" + startCell.getPrize());
+        label2.setFont(font2);
+        label2.setBorder(BorderFactory.createEmptyBorder(0,4,5,0));
+        label2.setForeground(Color.RED);
 
         this.add(mainPanel, BorderLayout.CENTER);
         this.setVisible(true);
@@ -58,19 +70,23 @@ public class GUIStartCell extends GUICell {
 
     @Override
     public void show(JPanel board, Player playerNow, PlayingField playingField){
-        JOptionPane.showMessageDialog(board, "Вы на стартовом поле, отдыхайте.");
+        JOptionPane.showMessageDialog(board, "Вы на стартовом поле, отдыхайте");
     }
 
     @Override
     public void setScaledInstance(int x, int y){
         mainPanel.setPreferredSize(new Dimension(x, y));
         if (x > 180) {
-            font = font.deriveFont(60f);
+            font1 = font1.deriveFont(60f);
+            font2 = font2.deriveFont(30f);
         } else if (x > 120) {
-            font = font.deriveFont(35f);
+            font1 = font1.deriveFont(35f);
+            font2 = font2.deriveFont(12f);
         }
-        label1.setFont(font);
-        mainPanel.add(label1);
+        label1.setFont(font1);
+        label2.setFont(font2);
+        mainPanel.add(label1, BorderLayout.NORTH);
+        mainPanel.add(label2, BorderLayout.SOUTH);
     }
     @Override
     public void update(){
