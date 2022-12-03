@@ -45,8 +45,8 @@ public class MainFrame extends JFrame {
     private JPanel panelEastMini;
     private JPanel panelSouthMini;
 
-    private ManagerFrame managerFrame = new ManagerFrame();
-    private GUICell [] guiCells;
+    private Dialog managerDialog = new ManagerDialog();
+    private final GUICell [] guiCells;
 
     private static Font font;
 
@@ -209,7 +209,7 @@ public class MainFrame extends JFrame {
                 Timer timer2 = new Timer(300, new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        managerFrame.setVisible(false);
+                        managerDialog.setVisible(false);
                         game.playerAction(playerNow);
                         try {
                             updateView();
@@ -224,11 +224,11 @@ public class MainFrame extends JFrame {
                             JOptionPane.showMessageDialog(board, "Игра окончена, победил игрок: '" + players.get(0).getName() + "'");
                             makeAMove.setVisible(false);
                             manager.setVisible(false);
-                            try {
-                                updateView();
-                            } catch (IOException e1) {
-                                e1.printStackTrace();
-                            }
+                        }
+                        try {
+                            updateView();
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
                         }
                     }
                 });
@@ -254,8 +254,8 @@ public class MainFrame extends JFrame {
                 Timer timer2 = new Timer(300, new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        managerFrame = new ManagerFrame(playerNow, playingField);
-                        managerFrame.setVisible(true);
+                        managerDialog = new ManagerDialog(playerNow, playingField);
+                        managerDialog.setVisible(true);
                     }
                 });
                 timer2.setRepeats(false);
