@@ -11,6 +11,19 @@ public class ContentPanel extends JPanel implements KeyListener {
     private final int width;
     private final int height;
     private final JFrame frame;
+    private static Font font;
+    private static Font fontBig;
+
+    static {
+        File font_file = new File("font\\Kosmos.ttf");
+        try {
+            Font fontNew = Font.createFont(Font.TRUETYPE_FONT, font_file);
+            font = fontNew.deriveFont(45f);
+            fontBig = fontNew.deriveFont(90f);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public ContentPanel(int width, int height, JFrame frame) {
         this.width = width;
@@ -23,28 +36,19 @@ public class ContentPanel extends JPanel implements KeyListener {
     }
 
 
-    private final String [] menus = new String [] {"НОВАЯ ИГРА", "НАСТРОЙКИ", "ВЫЙТИ"};
+    private final String [] menus = new String [] {"НОВАЯ ИГРА", "АВТОРЫ", "ВЫЙТИ"};
 
     private int focusIndex;
 
-    private final int[] menu_xs = new int[]{335, 345, 395};
+    private final int[] menu_xs = new int[]{335, 387, 399};
     private final int[] menu_ys = new int[]{340, 400, 470};
 
 
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Font font = new Font("BOLD", Font.BOLD, 45);
-        Font fontBig = new Font("BOLD", Font.BOLD, 90);
         Image img = Toolkit.getDefaultToolkit().getImage("image\\background2.gif");
-        File font_file = new File("font\\Kosmos.ttf");
-        try {
-            Font fontNew = Font.createFont(Font.TRUETYPE_FONT, font_file);
-            font = fontNew.deriveFont(45f);
-            fontBig = fontNew.deriveFont(90f);
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-        }
+
         g.drawImage(img, -190, -10, null);
         g.setFont(fontBig);
         g.setColor(Color.CYAN);
@@ -82,11 +86,13 @@ public class ContentPanel extends JPanel implements KeyListener {
             case KeyEvent.VK_ENTER:
                 if (focusIndex == 0) {
                     frame.dispose();
-                    new ParamsFrame(width, height).setVisible(true);
+                    new ParamsFrame(width, height);
+                } else if (focusIndex == 1) {
+                    frame.dispose();
+                    new AuthorsFrame(width, height);
                 } else if (focusIndex == 2) {
                     System.exit(0);
                 }
-                break;
         }
     }
 
