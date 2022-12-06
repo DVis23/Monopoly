@@ -105,6 +105,9 @@ public class GUIStreet extends GUICell {
             if (playerNow.getLiberalValues() > street.getCost()) {
                 String str = " Купить '" + street.getName() + "'?";
                 o = JOptionPane.showConfirmDialog(board,  str);
+            } else {
+                String str = " Вам не хватает денег купить улицу";
+                JOptionPane.showMessageDialog(board,  str);
             }
         } else if (playerNow.equals(street.getOwner())) {
             JOptionPane.showMessageDialog(board, "Вы на своей улице");
