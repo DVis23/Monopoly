@@ -36,12 +36,12 @@ public class ContentPanel extends JPanel implements KeyListener {
     }
 
 
-    private final String [] menus = new String [] {"НОВАЯ ИГРА", "АВТОРЫ", "ВЫЙТИ"};
+    private final String [] menus = new String [] {"НОВАЯ ИГРА", "ВЫЙТИ"};
 
     private int focusIndex;
 
-    private final int[] menu_xs = new int[]{335, 387, 399};
-    private final int[] menu_ys = new int[]{340, 400, 470};
+    private final int[] menu_xs = new int[]{335, 399};
+    private final int[] menu_ys = new int[]{400, 470};
 
 
 
@@ -88,9 +88,6 @@ public class ContentPanel extends JPanel implements KeyListener {
                     frame.dispose();
                     new ParamsFrame(width, height);
                 } else if (focusIndex == 1) {
-                    frame.dispose();
-                    new AuthorsFrame(width, height);
-                } else if (focusIndex == 2) {
                     System.exit(0);
                 }
         }
