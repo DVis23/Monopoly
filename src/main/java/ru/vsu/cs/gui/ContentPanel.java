@@ -52,7 +52,7 @@ public class ContentPanel extends JPanel implements KeyListener {
         g.drawImage(img, -190, -10, null);
         g.setFont(fontBig);
         g.setColor(Color.CYAN);
-        g.drawString("Monopoly", 223, 230);
+        g.drawString("Monopoly", 223, 330);
         this.repaint ();
 
         for (int i = 0; i < menus.length; i++) {
