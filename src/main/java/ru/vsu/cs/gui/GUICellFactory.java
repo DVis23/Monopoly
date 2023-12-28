@@ -3,8 +3,6 @@ package ru.vsu.cs.gui;
 import org.reflections.Reflections;
 import ru.vsu.cs.Cell;
 import ru.vsu.cs.PlayingField;
-import ru.vsu.cs.cells.*;
-import ru.vsu.cs.gui.gui_cells.*;
 
 import java.io.IOException;
 import java.util.*;

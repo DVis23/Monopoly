@@ -1,6 +1,5 @@
 package ru.vsu.cs.gui.gui_cells;
 
-import ru.vsu.cs.Cell;
 import ru.vsu.cs.Player;
 import ru.vsu.cs.PlayingField;
 import ru.vsu.cs.cells.Chance;
@@ -12,6 +11,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.function.Function;
 
 public class GUIChance extends GUICell {
@@ -46,29 +47,30 @@ public class GUIChance extends GUICell {
         mainPanel = new JPanel();
         mainPanel.setBackground(Color.BLACK);
         mainPanel.setLayout(new BorderLayout());
-        picture = ImageIO.read(new File("image\\77.png"));
+        picture = ImageIO.read(new File("image\\cell_icon\\chance.png"));
 
         this.add(mainPanel, BorderLayout.CENTER);
         this.setVisible(true);
     }
 
     @Override
-    public void show(JPanel board, Player playerNow, PlayingField playingField){
+    public void show(JPanel board, Player playerNow, PlayingField playingField, Locale locale){
+        ResourceBundle messages = ResourceBundle.getBundle("messages", locale);
         JLabel label;
         if (chance.getI() == 1) {
-            label= new JLabel(" Поле шанс: вы сделали взнос в размере 2000 ");
+            label= new JLabel(messages.getString("chance1"));
         } else if (chance.getI() == 2) {
-            label= new JLabel(" Поле шанс: вы выиграли в лотерее 5000 ");
+            label= new JLabel(messages.getString("chance2"));
         } else if (chance.getI() == 3) {
-            label= new JLabel(" Поле шанс: каждый игрок скидывается вам на банкет по 500 ");
+            label= new JLabel(messages.getString("chance3"));
         } else  {
-            label= new JLabel(" Поле шанс: вы выплатили каждому игроку по 500 в знак дружбы ");
+            label= new JLabel(messages.getString("chance4"));
         }
         label.setForeground(Color.WHITE);
         label.setFont(font);
         JOptionPane op = new JOptionPane(label, JOptionPane.INFORMATION_MESSAGE);
         op.setOpaque(true);
-        op.setIcon(new ImageIcon("image\\lv.gif"));
+        op.setIcon(new ImageIcon("image\\dialog_icon\\lv.gif"));
         op.createDialog(null).setVisible(true);
     }
 

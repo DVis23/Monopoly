@@ -1,21 +1,18 @@
 package ru.vsu.cs.gui.gui_cells;
 
-import ru.vsu.cs.Cell;
 import ru.vsu.cs.Player;
 import ru.vsu.cs.PlayingField;
-import ru.vsu.cs.cells.FreeParking;
-import ru.vsu.cs.cells.GoToJail;
 import ru.vsu.cs.cells.Jail;
 import ru.vsu.cs.gui.GUICell;
 import ru.vsu.cs.gui.GUICellFactory;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.function.Function;
 
 public class GUIJail extends GUICell {
@@ -39,17 +36,16 @@ public class GUIJail extends GUICell {
         mainPanel = new JPanel();
         mainPanel.setBackground(Color.BLACK);
         mainPanel.setLayout(new BorderLayout());
-        picture = ImageIO.read(new File("image\\76.png"));
+        picture = ImageIO.read(new File("image\\cell_icon\\jail.png"));
         this.add(mainPanel, BorderLayout.CENTER);
         this.setVisible(true);
     }
 
     @Override
-    public void show(JPanel board, Player playerNow, PlayingField playingField){
+    public void show(JPanel board, Player playerNow, PlayingField playingField, Locale locale){
+        ResourceBundle messages = ResourceBundle.getBundle("messages", locale);
         int skipping = playerNow.getSkipping();
-        if (skipping == 3 || skipping == 2) {
-            JOptionPane.showMessageDialog(board, " Вы пропускайте еще " + skipping + " хода ");
-        } else if (skipping == 1) JOptionPane.showMessageDialog(board, " Вы пропускайте еще " + skipping + " ход ");
+        JOptionPane.showMessageDialog(board, messages.getString("jail") + " " + skipping);
     }
 
     @Override

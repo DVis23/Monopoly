@@ -1,0 +1,45 @@
+[
+    
+        {
+            "name": "Житная улица",
+            "color": "BROWN",
+            "cost": 600,
+            "cell": 1
+        },
+        {
+            "name": "Нагатинская улица",
+            "color": "BROWN",
+            "cost": 600,
+            "cell": 2
+        },
+        {
+            "name": "Варшавское шоссе",
+            "color": "WHITE",
+            "cost": 1000,
+            "cell": 3
+        },
+        {
+            "name": "Улица Огарева",
+            "color": "WHITE",
+            "cost": 1000,
+            "cell": 6
+        },
+        {
+            "name": "Первая Парковая",
+            "color": "WHITE",
+            "cost": 1200,
+            "cell": 8
+        },
+        {
+            "name": "Улица Полянка",
+            "color": "ROSE",
+            "cost": 1400,
+            "cell": 9
+        },
+        {
+            "name": "Улица Сретенка",
+            "color": "ROSE",
+            "cost": 1400,
+            "cell": 11
+        }
+]

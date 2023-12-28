@@ -1,19 +1,17 @@
 package ru.vsu.cs.gui.gui_cells;
 
-import ru.vsu.cs.Cell;
 import ru.vsu.cs.Player;
 import ru.vsu.cs.PlayingField;
-import ru.vsu.cs.cells.GoToJail;
-import ru.vsu.cs.cells.StartCell;
 import ru.vsu.cs.cells.Street;
 import ru.vsu.cs.gui.GUICell;
 import ru.vsu.cs.gui.GUICellFactory;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.function.Function;
 
 public class GUIStreet extends GUICell {
@@ -93,31 +91,32 @@ public class GUIStreet extends GUICell {
             sb.append(" ").append(street.getIncome()).append("\n");
             sb.append(" ").append(street.getOwner().getName());
         }
-        if (street.getNumberHotel() != 0) sb.append("\n").append(" Отели: ").append(street.getNumberHotel());
+        if (street.getNumberHotel() != 0) sb.append("\n").append(street.getNumberHotel());
         String str = sb.toString();
         streetInform.setText(str);
     }
 
     @Override
-    public void show(JPanel board, Player playerNow, PlayingField playingField){
+    public void show(JPanel board, Player playerNow, PlayingField playingField, Locale locale){
+        ResourceBundle messages = ResourceBundle.getBundle("messages", locale);
         int o = 3;
         if (street.getOwner() == null) {
             if (playerNow.getLiberalValues() > street.getCost()) {
-                String str = " Купить '" + street.getName() + "'?";
+                String str = messages.getString("streetBuy") + " '" + street.getName() + "'?";
                 o = JOptionPane.showConfirmDialog(board,  str);
             } else {
-                String str = " Вам не хватает денег купить улицу";
+                String str = messages.getString("streetErrorBuy");
                 JOptionPane.showMessageDialog(board,  str);
             }
         } else if (playerNow.equals(street.getOwner())) {
-            JOptionPane.showMessageDialog(board, "Вы на своей улице");
+            JOptionPane.showMessageDialog(board, messages.getString("streetOwn"));
         } else {
-            JOptionPane.showMessageDialog(board, "Вы на улице игрока " + street.getOwner().getName() + "," +
-                    "\n" + "заптатите ему " + street.getIncome());
+            JOptionPane.showMessageDialog(board, messages.getString("streetWrong")
+                    + " " + street.getOwner().getName() + "," +
+                    "\n" + messages.getString("streetPay") + " " + street.getIncome());
         }
         if (o == 0) {
             street.action2(playerNow, playingField);
-            //update();
         }
     }
 
@@ -132,6 +131,7 @@ public class GUIStreet extends GUICell {
             font1 = font1.deriveFont(10f);
             streetInform.setPreferredSize(new Dimension(x, y - 25));
         } else {
+            font1 = font1.deriveFont(6f);
             streetInform.setPreferredSize(new Dimension(x, y - 15));
         }
         streetInform.setFont(font1);

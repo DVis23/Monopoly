@@ -11,6 +11,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.function.Function;
 
 public class GUICommunityChest extends GUICell {
@@ -45,28 +47,29 @@ public class GUICommunityChest extends GUICell {
         mainPanel = new JPanel();
         mainPanel.setBackground(Color.BLACK);
         mainPanel.setLayout(new BorderLayout());
-        picture = ImageIO.read(new File("image/community_chest_icon.png"));
+        picture = ImageIO.read(new File("image\\cell_icon\\community_chest.png"));
         this.add(mainPanel, BorderLayout.CENTER);
         this.setVisible(true);
     }
 
     @Override
-    public void show(JPanel board, Player playerNow, PlayingField playingField){
+    public void show(JPanel board, Player playerNow, PlayingField playingField, Locale locale){
+        ResourceBundle messages = ResourceBundle.getBundle("messages", locale);
         JLabel label;
         if (communityChest.getI() == 1) {
-            label= new JLabel(" Поле казна: вы заплатили налог 2500 ");
+            label= new JLabel(messages.getString("community1"));
         } else if (communityChest.getI() == 2) {
-            label= new JLabel(" Поле казна: вам выплатили 1000 за вашу улыбку ");
+            label= new JLabel(messages.getString("community2"));
         } else if (communityChest.getI() == 3) {
-            label= new JLabel(" Поле казна: вы получили в наследство 3000 ");
+            label= new JLabel(messages.getString("community3"));
         } else {
-            label= new JLabel(" Поле казна: вы выплатили каждому игроку по 1000 в знак уважения ");
+            label= new JLabel(messages.getString("community4"));
         }
         label.setForeground(Color.WHITE);
         label.setFont(font);
         JOptionPane op = new JOptionPane(label, JOptionPane.INFORMATION_MESSAGE);
         op.setOpaque(true);
-        op.setIcon(new ImageIcon("image\\lv.gif"));
+        op.setIcon(new ImageIcon("image\\dialog_icon\\lv.gif"));
         op.createDialog(null).setVisible(true);
     }
 

@@ -33,7 +33,7 @@ public class InformPlayer extends JPanel {
         textArea.setPreferredSize(new Dimension(200, 70));
 
         StringBuilder sb = new StringBuilder();
-        sb.append(player.getName()).append("\n");
+        sb.append(player.getName()).append(" ").append("\n");
         sb.append(player.getLiberalValues()).append("\n").append("\n");
 
         textArea.setText(sb.toString());

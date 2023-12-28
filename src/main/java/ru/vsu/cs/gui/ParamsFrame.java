@@ -29,12 +29,14 @@ public class ParamsFrame extends JFrame {
     private JButton begin;
     private JButton back;
 
+    private int sizeBoard;
+
     static {
         File fontFile1 = new File("font\\future.ttf");
         try {
             Font fontNew = Font.createFont(Font.TRUETYPE_FONT, fontFile1);
             font1 = fontNew.deriveFont(20f);
-            font2 = fontNew.deriveFont(30f);
+            font2 = fontNew.deriveFont(25f);
             font5 = fontNew.deriveFont(12f);
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
@@ -50,7 +52,7 @@ public class ParamsFrame extends JFrame {
 
     }
 
-    public ParamsFrame(int width, int height) {
+    public ParamsFrame(int width, int height, Locale locale) {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("MONOPOLY");
         this.pack();
@@ -70,8 +72,8 @@ public class ParamsFrame extends JFrame {
         });
 
         JPanel panelMain = new JPanel();
-        JPanel panelRight = new PanelRight(width, height);
-        JPanel panelLeft = new PanelLeft(width, height);
+        JPanel panelRight = new PanelRight(width, height, locale);
+        JPanel panelLeft = new PanelLeft(width, height, locale);
         panelMain.setLayout(new BorderLayout());
         panelMain.add(panelRight, BorderLayout.EAST);
         panelMain.add(panelLeft, BorderLayout.WEST);
@@ -83,8 +85,8 @@ public class ParamsFrame extends JFrame {
         UIManager.put("Button.focus", colorBackground);
         UIManager.put("OptionPane.background", colorBackground);
         UIManager.put("OptionPane.messageForeground", Color.WHITE);
-        UIManager.put("OptionPane.messageFont", font5); //OptionPane.informationIcon
-        UIManager.put("OptionPane.questionIcon", new ImageIcon("image\\lvFly.gif"));
+        UIManager.put("OptionPane.messageFont", font5);
+        UIManager.put("OptionPane.questionIcon", new ImageIcon("image\\dialog_icon\\lvFly.gif"));
 
 
         this.getContentPane().add(panelMain, "Center");
@@ -95,12 +97,16 @@ public class ParamsFrame extends JFrame {
     }
 
     public class PanelLeft extends JPanel {
-        int wight;
-        int height;
+        private final int wight;
+        private final int height;
+        private Locale locale;
+        private ResourceBundle messages;
 
-        public PanelLeft(int wight, int height) {
+        public PanelLeft(int wight, int height, Locale locale) {
             this.wight = wight/3*2 + 30;
             this.height = height;
+            this.locale = locale;
+            messages = ResourceBundle.getBundle("messages", locale);
             setPreferredSize(new Dimension(this.wight, this.height));
 
             JButton buttonAddPlayer = new JButton("+");
@@ -124,6 +130,28 @@ public class ParamsFrame extends JFrame {
             buttonRemovePlayer.setLocation(8, 200);
             buttonRemovePlayer.setSize(new Dimension(60, 40));
             buttonRemovePlayer.setFocusable(false);
+
+            JButton buttonAddSizeField = new JButton("+");
+            buttonAddSizeField.setFont(font2);
+            buttonAddSizeField.setBackground(colorBackground);
+            buttonAddSizeField.setForeground(Color.WHITE);
+            buttonAddSizeField.setFocusPainted(false);
+            buttonAddSizeField.setBorder(new LineBorder(Color.WHITE, 1));
+            this.add(buttonAddSizeField);
+            buttonAddSizeField.setLocation(8, 470);
+            buttonAddSizeField.setSize(new Dimension(60, 40));
+            buttonAddSizeField.setFocusable(false);
+
+            JButton buttonSubSizeField = new JButton("-");
+            buttonSubSizeField.setFont(font2);
+            buttonSubSizeField.setBackground(colorBackground);
+            buttonSubSizeField.setForeground(Color.WHITE);
+            buttonSubSizeField.setFocusPainted(false);
+            buttonSubSizeField.setBorder(new LineBorder(Color.WHITE, 1));
+            this.add(buttonSubSizeField);
+            buttonSubSizeField.setLocation(68, 470);
+            buttonSubSizeField.setSize(new Dimension(60, 40));
+            buttonSubSizeField.setFocusable(false);
 
             JTextField liberalValues = new SuperTextField(" 5000");
             startLiberalValues = liberalValues;
@@ -151,6 +179,13 @@ public class ParamsFrame extends JFrame {
             colorButtons.add(bc2);
             setLayout(null);
 
+            int[] sizesBoard = new int[]{12, 20, 32, 40};
+            JTextField sizeBoardField = new SuperTextField("  40");
+            sizeBoard = Integer.parseInt(sizeBoardField.getText().trim());
+            sizeBoardField.setEnabled(false);
+            this.add(sizeBoardField);
+            sizeBoardField.setLocation(128, 470);
+            sizeBoardField.setSize(new Dimension(340, 40));
 
             buttonAddPlayer.addActionListener(new ActionListener() {
                 @Override
@@ -193,6 +228,35 @@ public class ParamsFrame extends JFrame {
                 }
 
             });
+
+            buttonAddSizeField.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    sizeBoard = Integer.parseInt(sizeBoardField.getText().trim());
+                    for (int i = 0; i < sizesBoard.length; i++) {
+                        if (sizeBoard == sizesBoard[i] && i != sizesBoard.length - 1) {
+                            sizeBoardField.setText("  " + Integer.toString(sizesBoard[i + 1]));
+                            break;
+                        }
+                    }
+                    sizeBoard = Integer.parseInt(sizeBoardField.getText().trim());
+                }
+            });
+
+            buttonSubSizeField.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    sizeBoard = Integer.parseInt(sizeBoardField.getText().trim());
+                    for (int i = 0; i < sizesBoard.length; i++) {
+                        if (sizeBoard == sizesBoard[i] && i != 0) {
+                            sizeBoardField.setText("  " + Integer.toString(sizesBoard[i - 1]));
+                            break;
+                        }
+                    }
+                    sizeBoard = Integer.parseInt(sizeBoardField.getText().trim());
+                }
+
+            });
         }
 
         @Override
@@ -206,8 +270,9 @@ public class ParamsFrame extends JFrame {
             g2d.fillRect(0,0,wight,height);
             g.setFont(font3);
             g.setColor(Color.CYAN);
-            g.drawString("НАЧАЛЬНЫЕ СБЕРЕЖЕНИЯ", 8, 40);
-            g.drawString("ВВЕДИТЕ ИГРОКОВ", 8, 150);
+            g.drawString(messages.getString("initialSaving"), 8, 40);
+            g.drawString(messages.getString("enterPlayer"), 8, 150);
+            g.drawString(messages.getString("selectFieldSize"), 8, 460);
         }
 
         private class SuperTextField extends JTextField{
@@ -257,18 +322,20 @@ public class ParamsFrame extends JFrame {
     }
 
     public class PanelRight extends JPanel {
-        int wight;
-        int height;
+        private final int wight;
+        private final int height;
+        private final ResourceBundle messages;
 
-        public PanelRight(int wight, int height) {
+        public PanelRight(int wight, int height, Locale locale) {
             this.wight = wight/3 - 30;
             this.height = height;
+            messages = ResourceBundle.getBundle("messages", locale);
             setPreferredSize(new Dimension(this.wight, this.height));
             Color c1 = new Color(23, 4, 41);
             this.setBackground(c1);
 
-            back = new JButton("НАЗАД");
-            begin = new JButton("НАЧАТЬ");
+            back = new JButton(messages.getString("back"));
+            begin = new JButton(messages.getString("start"));
             back.setFont(font4);
             back.setForeground(Color.CYAN);
             back.setBorderPainted(false);
@@ -303,7 +370,7 @@ public class ParamsFrame extends JFrame {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             dispose();
-                            new StartFrame();
+                            new StartFrame(locale);
                         }
                     });
                     timer2.setRepeats(false);
@@ -355,41 +422,52 @@ public class ParamsFrame extends JFrame {
                                     }
                                     if (!sameColors) {
                                         try {
-                                            new MainFrame(map, wight, height);
+                                            if (sizeBoard == 12) {
+                                                new MainFrame(map, wight, height, locale, "configs\\cells_12");
+                                            } else if (sizeBoard == 20) {
+                                                new MainFrame(map, wight, height, locale, "configs\\cells_20");
+                                            } else if (sizeBoard == 32) {
+                                                new MainFrame(map, wight, height, locale, "configs\\cells_32");
+                                            } else if (sizeBoard == 40) {
+                                                new MainFrame(map, wight, height, locale, "configs\\cells_40");
+                                            }
                                         } catch (IOException | ParseException e1) {
                                             e1.printStackTrace();
                                         }
                                         dispose();
                                     } else {
-                                        JLabel label = new JLabel("Присутствуют игроки одного цвета");
+                                        JLabel label = new JLabel(messages.getString("errorColorMatch"));
                                         label.setFont(font1);
                                         label.setForeground(Color.WHITE);
                                         JOptionPane op = new JOptionPane(label, JOptionPane.INFORMATION_MESSAGE);
                                         op.setOpaque(true);
                                         op.setBackground(c1);
                                         op.setIcon(null);
-                                        op.createDialog(null, "Уп-сс").setVisible(true);
+                                        op.createDialog(null,
+                                                messages.getString("tittleErrorDialog")).setVisible(true);
                                     }
                                 } else {
-                                    JLabel label = new JLabel("Введите сумму больше 1000");
+                                    JLabel label = new JLabel(messages.getString("errorLowValue"));
                                     label.setFont(font1);
                                     label.setForeground(Color.WHITE);
                                     JOptionPane op = new JOptionPane(label, JOptionPane.INFORMATION_MESSAGE);
                                     op.setOpaque(true);
                                     op.setBackground(c1);
-                                    op.setIcon(new ImageIcon("image\\lv.gif"));
-                                    op.createDialog(null, "Уп-сс").setVisible(true);
+                                    op.setIcon(new ImageIcon("image\\dialog_icon\\lv.gif"));
+                                    op.createDialog(null,
+                                            messages.getString("tittleErrorDialog")).setVisible(true);
                                 }
 
                             } catch(NumberFormatException e1) {
-                                JLabel label = new JLabel("Введите число, а не...");
+                                JLabel label = new JLabel(messages.getString("errorNumberFormat"));
                                 label.setFont(font1);
                                 label.setForeground(Color.WHITE);
                                 JOptionPane op = new JOptionPane(label, JOptionPane.INFORMATION_MESSAGE);
                                 op.setOpaque(true);
                                 op.setBackground(c1);
-                                op.setIcon(new ImageIcon("image\\lv.gif"));
-                                op.createDialog(null, "Уп-сс").setVisible(true);
+                                op.setIcon(new ImageIcon("image\\dialog_icon\\lv.gif"));
+                                op.createDialog(null,
+                                        messages.getString("tittleErrorDialog")).setVisible(true);
                             }
                         }
                     });
@@ -403,7 +481,7 @@ public class ParamsFrame extends JFrame {
             // TODO Auto-generated method stub
             super.paintComponent(g);
             Font font = new Font("BOLD", Font.BOLD, 40);
-            Image img = Toolkit.getDefaultToolkit().getImage("image\\city.gif");
+            Image img = Toolkit.getDefaultToolkit().getImage("image\\background\\city.gif");
             g.drawImage(img, 12, 30, null);
             g.setFont(font);
             g.setColor(Color.CYAN);

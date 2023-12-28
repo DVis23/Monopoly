@@ -1,21 +1,17 @@
 package ru.vsu.cs.gui.gui_cells;
 
-import ru.vsu.cs.Cell;
 import ru.vsu.cs.Player;
 import ru.vsu.cs.PlayingField;
-import ru.vsu.cs.cells.Chance;
-import ru.vsu.cs.cells.FreeParking;
 import ru.vsu.cs.cells.GoToJail;
 import ru.vsu.cs.gui.GUICell;
 import ru.vsu.cs.gui.GUICellFactory;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.function.Function;
 
 public class GUIGoToJail extends GUICell {
@@ -41,7 +37,7 @@ public class GUIGoToJail extends GUICell {
         mainPanel = new JPanel();
         mainPanel.setBackground(Color.BLACK);
 
-        picture = ImageIO.read(new File("image/go_to_jail_icon.png"));
+        picture = ImageIO.read(new File("image\\cell_icon\\go_to_jail.png"));
         picLabel = new JLabel(new ImageIcon(picture));
 
         this.add(mainPanel, BorderLayout.CENTER);
@@ -49,7 +45,7 @@ public class GUIGoToJail extends GUICell {
     }
 
     @Override
-    public void show(JPanel board, Player playerNow, PlayingField playingField){
+    public void show(JPanel board, Player playerNow, PlayingField playingField, Locale locale){
     }
 
     @Override

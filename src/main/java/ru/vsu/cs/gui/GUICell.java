@@ -6,6 +6,7 @@ import ru.vsu.cs.PlayingField;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.util.Locale;
 
 public abstract class GUICell extends JPanel {
 
@@ -14,8 +15,9 @@ public abstract class GUICell extends JPanel {
         this.setBorder(new LineBorder(Color.WHITE, 1));
     }
 
-    public void show(JPanel board, Player playerNow, PlayingField playingField){
+    public void show(JPanel board, Player playerNow, PlayingField playingField, Locale locale){
     }
+
     public void setScaledInstance(int x, int y){
     }
     public void update() {

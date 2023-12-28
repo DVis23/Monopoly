@@ -1,21 +1,18 @@
 package ru.vsu.cs.gui.gui_cells;
 
-import ru.vsu.cs.Cell;
 import ru.vsu.cs.Player;
 import ru.vsu.cs.PlayingField;
-import ru.vsu.cs.cells.Chance;
-import ru.vsu.cs.cells.CommunityChest;
 import ru.vsu.cs.cells.FreeParking;
 import ru.vsu.cs.gui.GUICell;
 import ru.vsu.cs.gui.GUICellFactory;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.function.Function;
 
 public class GUIFreeParking extends GUICell {
@@ -49,20 +46,21 @@ public class GUIFreeParking extends GUICell {
         mainPanel.setPreferredSize(new Dimension(70, 70));
         mainPanel.setBackground(Color.BLACK);
         mainPanel.setLayout(new BorderLayout());
-        picture = ImageIO.read(new File("image/81.png"));
+        picture = ImageIO.read(new File("image\\cell_icon\\free_parking.png"));
         this.add(mainPanel, BorderLayout.CENTER);
         this.setVisible(true);
     }
 
     @Override
-    public void show(JPanel board, Player playerNow, PlayingField playingField){
+    public void show(JPanel board, Player playerNow, PlayingField playingField, Locale locale){
+        ResourceBundle messages = ResourceBundle.getBundle("messages", locale);
         JLabel label;
-        label= new JLabel(" Вы попали на бесплатную парковку, отдыхайте... ");
+        label= new JLabel(messages.getString("freeParking"));
         label.setForeground(Color.WHITE);
         label.setFont(font);
         JOptionPane op = new JOptionPane(label, JOptionPane.INFORMATION_MESSAGE);
         op.setOpaque(true);
-        op.setIcon(new ImageIcon("image\\lv.gif"));
+        op.setIcon(new ImageIcon("image\\dialog_icon\\lv.gif"));
         op.createDialog(null).setVisible(true);
     }
     @Override

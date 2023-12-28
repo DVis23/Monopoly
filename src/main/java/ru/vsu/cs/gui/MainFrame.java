@@ -5,6 +5,8 @@ import ru.vsu.cs.Cell;
 import ru.vsu.cs.Game;
 import ru.vsu.cs.Player;
 import ru.vsu.cs.PlayingField;
+
+import javax.swing.Timer;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -12,11 +14,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
 import java.util.List;
+import java.util.*;
 
 public class MainFrame extends JFrame {
+    private final ResourceBundle messages;
 
     private final Game game;
     private final List<Player> players;
@@ -24,26 +26,16 @@ public class MainFrame extends JFrame {
     private final PlayingField playingField;
     private Player playerNow;
 
-    private JPanel panelMain;
-    private JPanel board;
-    private JPanel panelPlayer;
-    private JPanel panelButton;
-    private JPanel panelRight;
-    private JButton makeAMove;
-    private JButton manager;
-    private JButton back;
+    private final JPanel panelMain;
+    private final JPanel board;
+    private final JPanel panelPlayer;
+    private final JPanel panelButton;
+    private final JPanel panelRight;
+    private final JButton makeAMove;
+    private final JButton manager;
+    private final JButton back;
 
-    private JPanel panelWest;
-    private JPanel panelNorth;
-    private JPanel panelEast;
-    private JPanel panelSouth;
-
-    private JPanel panelCenter;
-
-    private JPanel panelWestMini;
-    private JPanel panelNorthMini;
-    private JPanel panelEastMini;
-    private JPanel panelSouthMini;
+    private final JPanel panelCenter;
 
     private Dialog managerDialog = new ManagerDialog();
     private final GUICell [] guiCells;
@@ -60,12 +52,15 @@ public class MainFrame extends JFrame {
         }
     }
 
-    public MainFrame(Map<Player, Color> map, int wight, int height) throws IOException, ParseException {
+    public MainFrame(Map<Player, Color> map, int wight, int height, Locale locale, String dir) throws IOException, ParseException {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("MONOPOLY");
         this.pack();
         this.setSize(wight, height);
         this.setResizable(false);
+
+        messages = ResourceBundle.getBundle("messages", locale);
+
         this.map = map;
 
         players = new ArrayList<>(map.keySet());
@@ -74,7 +69,7 @@ public class MainFrame extends JFrame {
         this.setContentPane(panelMain);
         this.getContentPane().setLayout(new BorderLayout());
 
-        game = new Game(players);
+        game = new Game(players, dir);
         playingField = game.getPlayingField();
 
         panelRight = new JPanel();
@@ -84,9 +79,9 @@ public class MainFrame extends JFrame {
         panelButton = new JPanel();
         panelButton.setPreferredSize(new Dimension(300, 200));
         panelButton.setBackground(new Color(23, 4, 41));
-        makeAMove = new SuperButton("СДЕЛАТЬ ХОД");
-        manager = new SuperButton("МЕНЕДЖЕР");
-        back = new SuperButton("ВЫЙТИ");
+        makeAMove = new SuperButton(messages.getString("makeMove"));
+        manager = new SuperButton(messages.getString("manager"));
+        back = new SuperButton(messages.getString("exit"));
 
 
         GridLayout layout = new GridLayout(6, 1, 0, 0);
@@ -110,83 +105,19 @@ public class MainFrame extends JFrame {
         panelRight.add(panelButton, BorderLayout.NORTH);
         panelRight.add(panelPlayer, BorderLayout.SOUTH);
 
-        board = new JPanel();
         int sizeBoard = 770;
-        board.setPreferredSize(new Dimension(sizeBoard, sizeBoard));
-        board.setLayout(new BorderLayout(0,0));
-        board.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-
         int countCell = playingField.getConstCell();
-        int countVerCell = countCell/4 - 1;
         int countHorCell = countCell/4 + 1;
-        int sizeCell =  sizeBoard/countHorCell;
-        int sizeMiniBoard = sizeBoard - 2*sizeCell;
-        int sizeMiniCell = sizeMiniBoard/countHorCell;
-        guiCells = GUICellFactory.guiCells(playingField, sizeCell, sizeCell);
+        int cellX =  sizeBoard/countHorCell;
+        int cellY =  sizeBoard/countHorCell - 2;
+        guiCells = GUICellFactory.guiCells(playingField, cellX, cellY);
+        for (GUICell guiCell : guiCells) guiCell.setPreferredSize(new Dimension(cellX, cellY));
 
-        GridLayout layoutVer = new GridLayout(countVerCell, 1, 0, 0);
-        GridLayout layoutHor= new GridLayout(1, countHorCell, 0, 0);
-
-        panelWest = new JPanel();
-        panelWest.setBackground(Color.BLACK);
-        panelWest.setPreferredSize(new Dimension(sizeCell, sizeBoard - sizeCell*2));
-        panelWest.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-        panelWest.setLayout(layoutVer);
-        board.add(panelWest, BorderLayout.WEST);
-
-        panelEast = new JPanel();
-        panelEast.setBackground(Color.BLACK);
-        panelEast.setPreferredSize(new Dimension(sizeCell, sizeBoard - sizeCell*2));
-        panelEast.setLayout(layoutVer);
-        board.add(panelEast, BorderLayout.EAST);
-
-        panelSouth = new JPanel();
-        panelSouth.setBackground(Color.BLACK);
-        panelSouth.setPreferredSize(new Dimension(sizeBoard, sizeCell));
-        panelSouth.setLayout(layoutHor);
-        board.add(panelSouth, BorderLayout.SOUTH);
-
-        panelNorth = new JPanel();
-        panelNorth.setBackground(Color.BLACK);
-        panelNorth.setPreferredSize(new Dimension(sizeBoard, sizeCell));
-        panelNorth.setLayout(layoutHor);
-        board.add(panelNorth, BorderLayout.NORTH);
+        board = new JPanel();
+        board.setLayout(new GridBagLayout());
 
         panelCenter = new CenterPanel();
-        panelCenter.setPreferredSize(new Dimension(sizeMiniBoard, sizeMiniBoard));
-        panelCenter.setLayout(new BorderLayout(0,0));
-        panelCenter.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        board.add(panelCenter, BorderLayout.CENTER);
-
-        panelWestMini = new JPanel();
-        panelWestMini.setBackground(Color.BLACK);
-        panelWestMini.setPreferredSize(new Dimension(sizeMiniCell, sizeMiniBoard - 2*sizeMiniCell));
-        panelWestMini.setLayout(layoutVer);
-        panelWestMini.setBorder(BorderFactory.createEmptyBorder(-4, -1, -4, 0));
-        panelCenter.add(panelWestMini, BorderLayout.WEST);
-
-        panelEastMini = new JPanel();
-        panelEastMini.setBackground(Color.BLACK);
-        panelEastMini.setPreferredSize(new Dimension(sizeMiniCell, sizeMiniBoard - 2*sizeMiniCell));
-        panelEastMini.setLayout(layoutVer);
-        panelEastMini.setBorder(BorderFactory.createEmptyBorder(-4, 0, -4, -1));
-        panelCenter.add(panelEastMini, BorderLayout.EAST);
-
-        panelSouthMini = new JPanel();
-        panelSouthMini.setBackground(Color.BLACK);
-        panelSouthMini.setPreferredSize(new Dimension(sizeMiniBoard, sizeMiniCell));
-        panelSouthMini.setLayout(layoutHor);
-        panelSouthMini.setBorder(BorderFactory.createEmptyBorder(0, -4, 0, -4));
-        panelCenter.add(panelSouthMini, BorderLayout.SOUTH);
-
-        panelNorthMini = new JPanel();
-        panelNorthMini.setBackground(Color.BLACK);
-        panelNorthMini.setPreferredSize(new Dimension(sizeMiniBoard, sizeMiniCell));
-        panelNorthMini.setLayout(layoutHor);
-        panelNorthMini.setBorder(BorderFactory.createEmptyBorder(0, -4, 0, -4));
-        panelCenter.add(panelNorthMini, BorderLayout.NORTH);
-
-
+        panelCenter.setLayout(new GridLayout(countHorCell, countHorCell));
 
         drawPlayersBoard();
         drawBoardPanel();
@@ -217,11 +148,12 @@ public class MainFrame extends JFrame {
                             e1.printStackTrace();
                         }
 
-                        guiCells[playerNow.getStep()].show(board, playerNow, game.getPlayingField());
+                        guiCells[playerNow.getStep()].show(board, playerNow, game.getPlayingField(), locale);
 
                         nextPlayer();
                         if (game.getGameState() == Game.GameState.GAME_OVER) {
-                            JOptionPane.showMessageDialog(board, "Игра окончена, победил игрок: '" + players.get(0).getName() + "'");
+                            JOptionPane.showMessageDialog(board, messages.getString("gameOver") +
+                                    " '" + players.get(0).getName() + "'");
                             makeAMove.setVisible(false);
                             manager.setVisible(false);
                         }
@@ -254,8 +186,7 @@ public class MainFrame extends JFrame {
                 Timer timer2 = new Timer(300, new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        managerDialog = new ManagerDialog(playerNow, playingField);
-                        managerDialog.setVisible(true);
+                        managerDialog = new ManagerDialog(playerNow, playingField, locale);
                     }
                 });
                 timer2.setRepeats(false);
@@ -323,63 +254,90 @@ public class MainFrame extends JFrame {
             g2d.fillRect(0,0,700,700);
         }
     }
-    private void drawBoardPanel() throws IOException {
-        Cell [] cells = playingField.getCells();
-        drawPanel(panelNorth, 0, cells.length/4);
-        drawPanel(panelEast, cells.length/4 + 1, cells.length/2 - 1);
-        drawPanel(panelSouth, cells.length/4*3,cells.length/2);
-        drawPanel(panelWest, cells.length - 1, cells.length/4*3 + 1);
-    }
 
-    private void drawPanel(JPanel panel, int a, int b) throws IOException {
-        if (a < b) {
-            for (int i = a; i <= b; i++) {
-                panel.add(guiCells[i]);
+    private void drawBoardPanel() {
+        Cell[] cells = playingField.getCells();
+        int countCell = playingField.getConstCell();
+        int countVerCell = countCell/4 - 1;
+        int countHorCell = countCell/4 + 1;
+
+        board.removeAll();
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.gridwidth = countVerCell;
+        gbc.gridheight = countVerCell;
+        board.add(panelCenter, gbc);
+
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        for (int i = 0; i < countHorCell; i++) {
+            gbc.gridx = i;
+            gbc.gridy = 0;
+            board.add(guiCells[i], gbc);
+        }
+        for (int i = 0; i < countVerCell; i++) {
+            for (int j = 0; j < countHorCell; j++) {
+                gbc.gridx = j;
+                gbc.gridy = i + 1;
+                if (j == 0) {
+                    board.add(guiCells[cells.length - (i + 1)], gbc);
+                } else if (j == countHorCell - 1) {
+                    board.add(guiCells[countHorCell + i], gbc);
+                }
             }
-        } else if (a > b) {
-            for (int i = a; i >= b; i--) {
-                panel.add(guiCells[i]);
-            }
+        }
+        for (int i = 0; i < countHorCell; i++) {
+            gbc.gridx = i;
+            gbc.gridy = countHorCell - 1;
+            board.add(guiCells[cells.length - 1 - countVerCell - i], gbc);
         }
     }
 
     private void drawBoardMini() {
+        panelCenter.removeAll();
         Cell [] cells = playingField.getCells();
-        drawPanelMini(panelNorthMini, 0, cells.length/4, players);
-        drawPanelMini(panelEastMini, cells.length/4 + 1, cells.length/2 - 1, players);
-        drawPanelMini(panelSouthMini, cells.length/4*3,cells.length/2, players);
-        drawPanelMini(panelWestMini, cells.length - 1, cells.length/4*3 + 1, players);
-    }
-
-    private void drawPanelMini(JPanel panel, int a, int b, List<Player> players) {
-        GridLayout layout = new GridLayout(players.size(), 1, 0, 0);
-        if (a < b) {
-            for (int i = a; i <= b; i++) {
-                drawCellMini(panel, i, players, layout);
+        int countHorCell = cells.length/4 + 1;
+        int countVerCell = cells.length/4 - 1;
+        for (int i = 0; i < countHorCell; i++) {
+            drawCellMini(panelCenter, i, players);
+        }
+        for (int i = 0; i < countVerCell; i++) {
+            for (int j = 0; j < countHorCell; j++) {
+                if (j == 0) {
+                    drawCellMini(panelCenter, cells.length - (i + 1), players);
+                } else if (j == countHorCell - 1){
+                    drawCellMini(panelCenter, countHorCell + i, players);
+                } else {
+                    panelCenter.add(new JLabel(""));;
+                }
             }
-        } else if (a > b) {
-            for (int i = a; i >= b; i--) {
-                drawCellMini(panel, i, players, layout);
-            }
+        }
+        for (int i = 0; i < countHorCell; i++) {
+            drawCellMini(panelCenter, cells.length - 1 - countVerCell - i, players);
         }
     }
 
 
-    private void drawCellMini(JPanel panel, int i, List<Player> players, GridLayout layout) {
+    private void drawCellMini(JPanel panel, int i, List<Player> players) {
         JPanel panelMini = new JPanel();
+        GridLayout layout = new GridLayout(players.size(), 1, 0, 0);
         panelMini.setLayout(layout);
         panelMini.setBorder(new LineBorder(Color.WHITE, 1));
         panelMini.setBackground(new Color(47, 23, 52));
-        for (int j = 0; j < players.size(); j++) {
-            if(players.get(j).getStep() == i) {
+        for (Player value : players) {
+            if (value.getStep() == i) {
                 JPanel player = new JPanel();
-                Color color = map.get(players.get(j));
+                Color color = map.get(value);
                 player.setBackground(color);
                 panelMini.add(player);
             }
         }
         panel.add(panelMini);
     }
+
 
     private void nextPlayer() {
         int i = players.indexOf(playerNow);
@@ -388,32 +346,23 @@ public class MainFrame extends JFrame {
         playerNow = players.get(i);
     }
 
-    private void clearBoardMini() {
-        panelNorthMini.removeAll();
-        panelEastMini.removeAll();
-        panelSouthMini.removeAll();
-        panelWestMini.removeAll();
-    }
-
     private void updateView() throws IOException {
         updatePlayersBoard();
-        for (int i = 0; i < guiCells.length; i++) {
-            guiCells[i].update();
+        for (GUICell guiCell : guiCells) {
+            guiCell.update();
         }
         drawBoardPanel();
-        clearBoardMini();
-        drawBoardMini();
         this.setVisible(true);
     }
 
     private void drawPlayersBoard() {
-        for (int i = 0; i < players.size(); i++) {
-            InformPlayer informPlayer = new InformPlayer(players.get(i));
+        for (Player player : players) {
+            InformPlayer informPlayer = new InformPlayer(player);
             JPanel colorPanel = new JPanel();
             colorPanel.setPreferredSize(new Dimension(11, 11));
-            Color color = map.get(players.get(i));
+            Color color = map.get(player);
             colorPanel.setBackground(color);
-            if (players.get(i).equals(playerNow)) {
+            if (player.equals(playerNow)) {
                 informPlayer.textRed();
             }
             informPlayer.add(colorPanel);
@@ -425,6 +374,7 @@ public class MainFrame extends JFrame {
         panelPlayer.removeAll();
         panelPlayer.repaint();
         drawPlayersBoard();
+        drawBoardMini();
     }
 
 }

@@ -13,8 +13,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class ManagerDialog extends JDialog {
+    private ResourceBundle messages;
     private JPanel mainPanel;
     private static Font font;
 
@@ -28,12 +31,15 @@ public class ManagerDialog extends JDialog {
         }
     }
 
-    public ManagerDialog(Player player, PlayingField playingField) {
+    public ManagerDialog(Player player, PlayingField playingField, Locale locale) {
+        messages = ResourceBundle.getBundle("messages", locale);
         this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         this.setSize(650, 600);
-        this.setTitle("MANAGER FOR " + player.getName() + " (" + player.getLiberalValues() + ")");
+        this.setTitle(messages.getString("managerFor") + " " + player.getName() + " (" + player.getLiberalValues() + ")");
         this.setResizable(false);
         setModal(true);
+
+
         mainPanel = new JPanel();
         mainPanel.setLayout(null);
         mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -53,8 +59,9 @@ public class ManagerDialog extends JDialog {
         for (Cell cell : cells) {
             if (cell.getClass() == Street.class) {
                 if (((Street) cell).getOwner() == player) {
-                    String str = " Продать улицу ' " + ((Street) cell).getName() + " ' за " +
-                            ((Street) cell).getCost() / 2;
+                    String str = messages.getString("managerSellStreet") +
+                            " '" + ((Street) cell).getName() + "' " + messages.getString("managerSellFor")
+                            + " " + ((Street) cell).getCost() / 2;
                     JButton button = new JButton(str);
                     button.setFont(font);
                     button.setForeground(Color.BLACK);
@@ -73,13 +80,16 @@ public class ManagerDialog extends JDialog {
                             ((Street) cell).deleteOwner(playingField);
                             player.setLiberalValues(player.getLiberalValues() + ((Street) cell).getCost() / 2);
                             mainPanel.remove(button);
-                            setTitle("MANAGER FOR " + player.getName() + " (" + player.getLiberalValues() + ")");
+                            setTitle(messages.getString("managerFor") + " " +
+                                    player.getName() + " (" + player.getLiberalValues() + ")");
                             repaint();
                         }
                     });
 
                     if (((Street) cell).availabilityOfStreets(player, playingField)) {
-                        String str2 = " Построить отель на улице ' " + ((Street) cell).getName() + " ' за " +
+                        String str2 = messages.getString("managerBuildHotel") + " '" +
+                                ((Street) cell).getName() + "' " +
+                                messages.getString("managerSellFor") + " " +
                                 ((Street) cell).getCostHotel() + " (" + ((Street) cell).getNumberHotel() + ")";
                         JButton button2 = new JButton(str2);
                         button2.setFont(font);
@@ -97,10 +107,13 @@ public class ManagerDialog extends JDialog {
                             @Override
                             public void actionPerformed(ActionEvent actionEvent) {
                                 ((Street) cell).buyHotel(player, playingField);
-                                String str = " Построить отель на улице ' " + ((Street) cell).getName() + " ' за " +
+                                String str = messages.getString("managerBuildHotel") + " '" +
+                                        ((Street) cell).getName() + "' " +
+                                        messages.getString("managerSellFor") + " " +
                                         ((Street) cell).getCostHotel() + " (" + ((Street) cell).getNumberHotel() + ")";
                                 button2.setText(str);
-                                setTitle("MANAGER FOR " + player.getName() + " (" + player.getLiberalValues() + ")");
+                                setTitle(messages.getString("managerFor") + " "
+                                        + player.getName() + " (" + player.getLiberalValues() + ")");
                                 repaint();
 
                             }
@@ -110,7 +123,9 @@ public class ManagerDialog extends JDialog {
             }
             if (cell.getClass() == RailRoad.class) {
                 if (((RailRoad) cell).getOwner() == player) {
-                    String str = " Продать железную дорогу ' " + ((RailRoad) cell).getName() + " ' за " +
+                    String str = messages.getString("managerSellRailRoad") + " '" +
+                            ((RailRoad) cell).getName() + "' " +
+                            messages.getString("managerSellFor") + " " +
                             ((RailRoad) cell).getCost() / 2;
                     JButton button = new JButton(str);
                     button.setFont(font);
@@ -130,7 +145,8 @@ public class ManagerDialog extends JDialog {
                             ((RailRoad) cell).deleteOwner(player, playingField);
                             player.setLiberalValues(player.getLiberalValues() + ((RailRoad) cell).getCost() / 2);
                             mainPanel.remove(button);
-                            setTitle("MANAGER FOR " + player.getName() + " (" + player.getLiberalValues() + ")");
+                            setTitle(messages.getString("managerFor") + " " +
+                                    player.getName() + " (" + player.getLiberalValues() + ")");
                             repaint();
                         }
                     });
@@ -139,8 +155,10 @@ public class ManagerDialog extends JDialog {
             }
             if (cell.getClass() == UtilityCompany.class) {
                 if (((UtilityCompany) cell).getOwner() == player) {
-                    String str = " Продать коммунальную службу ' " + ((UtilityCompany) cell).getName() +
-                            " ' за " + ((UtilityCompany) cell).getCost() / 2;
+                    String str = messages.getString("managerSellUtilityCompany") + " '" +
+                            ((UtilityCompany) cell).getName() + "' " +
+                            messages.getString("managerSellFor") + " " +
+                            ((UtilityCompany) cell).getCost() / 2;
                     JButton button = new JButton(str);
                     button.setFont(font);
                     button.setForeground(Color.BLACK);
@@ -159,7 +177,8 @@ public class ManagerDialog extends JDialog {
                             ((UtilityCompany) cell).deleteOwner(player, playingField);
                             player.setLiberalValues(player.getLiberalValues() + ((UtilityCompany) cell).getCost() / 2);
                             mainPanel.remove(button);
-                            setTitle("MANAGER FOR " + player.getName() + " (" + player.getLiberalValues() + ")");
+                            setTitle(messages.getString("managerFor") + " " +
+                                    player.getName() + " (" + player.getLiberalValues() + ")");
                             repaint();
                         }
                     });
@@ -173,6 +192,6 @@ public class ManagerDialog extends JDialog {
         this.setVisible(true);
     }
 
-    public ManagerDialog(){
+    public  ManagerDialog() {
     }
 }

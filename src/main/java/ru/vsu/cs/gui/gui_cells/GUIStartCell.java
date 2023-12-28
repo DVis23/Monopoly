@@ -1,22 +1,17 @@
 package ru.vsu.cs.gui.gui_cells;
 
-import ru.vsu.cs.Cell;
 import ru.vsu.cs.Player;
 import ru.vsu.cs.PlayingField;
-import ru.vsu.cs.cells.Chance;
-import ru.vsu.cs.cells.GoToJail;
-import ru.vsu.cs.cells.RailRoad;
 import ru.vsu.cs.cells.StartCell;
 import ru.vsu.cs.gui.GUICell;
 import ru.vsu.cs.gui.GUICellFactory;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.function.Function;
 
 public class GUIStartCell extends GUICell {
@@ -25,7 +20,6 @@ public class GUIStartCell extends GUICell {
     private final JLabel label2;
     private static Font font1;
     private static Font font2;
-    private StartCell startCell;
 
     static {
         Function<StartCell, GUIStartCell> function = c -> {
@@ -49,7 +43,6 @@ public class GUIStartCell extends GUICell {
     }
 
     public GUIStartCell(StartCell startCell) throws IOException {
-        this.startCell = startCell;
         this.setLayout(new BorderLayout());
         mainPanel = new JPanel();
         mainPanel.setBackground(Color.BLACK);
@@ -69,8 +62,9 @@ public class GUIStartCell extends GUICell {
     }
 
     @Override
-    public void show(JPanel board, Player playerNow, PlayingField playingField){
-        JOptionPane.showMessageDialog(board, "Вы на стартовом поле, отдыхайте");
+    public void show(JPanel board, Player playerNow, PlayingField playingField, Locale locale){
+        ResourceBundle messages = ResourceBundle.getBundle("messages", locale);
+        JOptionPane.showMessageDialog(board, messages.getString("startCell"));
     }
 
     @Override
@@ -82,6 +76,9 @@ public class GUIStartCell extends GUICell {
         } else if (x > 120) {
             font1 = font1.deriveFont(35f);
             font2 = font2.deriveFont(12f);
+        } else {
+            font1 = font1.deriveFont(20f);
+            font2 = font2.deriveFont(10f);
         }
         label1.setFont(font1);
         label2.setFont(font2);

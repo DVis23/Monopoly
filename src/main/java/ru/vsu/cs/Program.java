@@ -1,10 +1,7 @@
 package ru.vsu.cs;
 
-import org.json.simple.parser.ParseException;
-import ru.vsu.cs.gui.MainFrame;
 import ru.vsu.cs.gui.StartFrame;
 
-import java.io.IOException;
 import java.util.Locale;
 
 

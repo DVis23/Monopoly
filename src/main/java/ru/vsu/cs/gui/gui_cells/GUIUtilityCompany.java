@@ -1,6 +1,5 @@
 package ru.vsu.cs.gui.gui_cells;
 
-import ru.vsu.cs.Cell;
 import ru.vsu.cs.Player;
 import ru.vsu.cs.PlayingField;
 import ru.vsu.cs.cells.UtilityCompany;
@@ -12,7 +11,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.function.Function;
 
 public class GUIUtilityCompany extends GUICell {
@@ -48,13 +48,13 @@ public class GUIUtilityCompany extends GUICell {
         mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
 
-        if (Objects.equals(utilityCompany.getName(), "Электростанция")) {
-            picture = ImageIO.read(new File("image\\79.png"));
+        if (utilityCompany.getType() == 1) {
+            picture = ImageIO.read(new File("image\\cell_icon\\uc1.png"));
             picLabel = new JLabel(new ImageIcon(picture));
             picLabel.setLayout(new BorderLayout(0,0));
             picLabel.setBorder(BorderFactory.createEmptyBorder(0,0,5,0));
-        } else if (Objects.equals(utilityCompany.getName(), "Водопровод")) {
-            picture = ImageIO.read(new File("image\\80.png"));
+        } else if (utilityCompany.getType() == 2) {
+            picture = ImageIO.read(new File("image\\cell_icon\\uc2.png"));
             picLabel = new JLabel(new ImageIcon(picture));
             picLabel.setLayout(new BorderLayout(0,0));
             picLabel.setBorder(BorderFactory.createEmptyBorder(0,0,5,0));
@@ -69,7 +69,6 @@ public class GUIUtilityCompany extends GUICell {
         UCInform.setWrapStyleWord(true);
 
         write();
-
         this.add(mainPanel, BorderLayout.CENTER);
         this.setVisible(true);
     }
@@ -87,21 +86,23 @@ public class GUIUtilityCompany extends GUICell {
     }
 
     @Override
-    public void show(JPanel board, Player playerNow, PlayingField playingField){
+    public void show(JPanel board, Player playerNow, PlayingField playingField, Locale locale){
+        ResourceBundle messages = ResourceBundle.getBundle("messages", locale);
         int o = 3;
         if (utilityCompany.getOwner() == null) {
             if (playerNow.getLiberalValues() > utilityCompany.getCost()) {
-                o = JOptionPane.showConfirmDialog(board, "Купить коммунальную службу?");
+                o = JOptionPane.showConfirmDialog(board, messages.getString("utilityCompanyBuy") +
+                        " '" + utilityCompany.getName() + "'?");
             }
             if (o == 0) {
                 utilityCompany.action2(playerNow, playingField);
             }
         } else if (playerNow.equals(utilityCompany.getOwner())) {
-            JOptionPane.showMessageDialog(board, "Вы приехали с проверкой в свою коммунальную службу ");
+            JOptionPane.showMessageDialog(board, messages.getString("utilityCompanyOwn"));
         } else {
-            JOptionPane.showMessageDialog(board, "Вы воспользовались услугами коммунальной службы игрока "
+            JOptionPane.showMessageDialog(board, messages.getString("utilityCompanyWrong") + " "
                     + utilityCompany.getOwner().getName() + "," +
-                    "\n" + "заптатите ему " + utilityCompany.getIncome());
+                    "\n" + messages.getString("utilityCompanyPay") + " " + utilityCompany.getIncome());
         }
     }
 
@@ -117,6 +118,8 @@ public class GUIUtilityCompany extends GUICell {
             font = font.deriveFont(12f);
         } else if (x > 120) {
             font = font.deriveFont(10f);
+        } else {
+            font = font.deriveFont(8f);
         }
         UCInform.setFont(font);
     }

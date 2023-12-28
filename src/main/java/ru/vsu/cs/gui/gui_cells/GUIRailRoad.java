@@ -1,21 +1,18 @@
 package ru.vsu.cs.gui.gui_cells;
 
-import ru.vsu.cs.Cell;
 import ru.vsu.cs.Player;
 import ru.vsu.cs.PlayingField;
-import ru.vsu.cs.cells.GoToJail;
-import ru.vsu.cs.cells.Jail;
 import ru.vsu.cs.cells.RailRoad;
 import ru.vsu.cs.gui.GUICell;
 import ru.vsu.cs.gui.GUICellFactory;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.function.Function;
 
 public class GUIRailRoad extends GUICell {
@@ -51,7 +48,7 @@ public class GUIRailRoad extends GUICell {
         mainPanel = new JPanel();
         mainPanel.setBackground(Color.BLACK);
         railRoadInform = new JTextArea();
-        picture = ImageIO.read(new File("image/78.png"));
+        picture = ImageIO.read(new File("image\\cell_icon\\rail_road.png"));
         picLabel = new JLabel(new ImageIcon(picture));
         picLabel.setLayout(new BorderLayout(0,0));
         picLabel.setBorder(BorderFactory.createEmptyBorder(10,0,0,0));
@@ -84,20 +81,23 @@ public class GUIRailRoad extends GUICell {
     }
 
     @Override
-    public void show(JPanel board, Player playerNow, PlayingField playingField){
+    public void show(JPanel board, Player playerNow, PlayingField playingField, Locale locale){
+        ResourceBundle messages = ResourceBundle.getBundle("messages", locale);
         int o = 3;
         if (railRoad.getOwner() == null) {
             if (playerNow.getLiberalValues() > railRoad.getCost()) {
-                o = JOptionPane.showConfirmDialog(board, "Купить железную дорогу?");
+                o = JOptionPane.showConfirmDialog(board, messages.getString("railRoadBuy") +
+                         " '" + railRoad.getName() + "' ?");
             }
             if (o == 0) {
                 railRoad.action2(playerNow, playingField);
             }
         } else if (playerNow.equals(railRoad.getOwner())) {
-            JOptionPane.showMessageDialog(board, "Вы воспользовались своей железной дороге");
+            JOptionPane.showMessageDialog(board, messages.getString("railRoadOwn"));
         } else {
-            JOptionPane.showMessageDialog(board, "Вы воспользовались железной дороге игрока " + railRoad.getOwner().getName() + "," +
-                    "\n" + "заптатите ему " + railRoad.getIncome());
+            JOptionPane.showMessageDialog(board, messages.getString("railRoadWrong") +
+                    " " + railRoad.getOwner().getName() + "," +
+                    "\n" +messages.getString("railRoadPay") + " " + railRoad.getIncome());
         }
     }
     @Override
@@ -112,6 +112,8 @@ public class GUIRailRoad extends GUICell {
             font = font.deriveFont(12f);
         } else if (x > 120) {
             font = font.deriveFont(10f);
+        } else  {
+            font = font.deriveFont(5.5f);
         }
         railRoadInform.setFont(font);
     }
